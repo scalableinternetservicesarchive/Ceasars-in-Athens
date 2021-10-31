@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  availability: 
+  description: MyString
+  title: MyString
+  zipcode: 1
+  title: MyString
+  user: one
+
+two:
+  availability: 
+  description: MyString
+  title: MyString
+  zipcode: 1
+  title: MyString
+  user: two
