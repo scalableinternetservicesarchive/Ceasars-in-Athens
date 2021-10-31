@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 2021_10_31_002700) do
   enable_extension "plpgsql"
 
   create_table "services", force: :cascade do |t|
-    t.datetime "availability", default: [], array: true
+    t.string "availability"
     t.string "description"
     t.string "title"
     t.integer "zipcode"
