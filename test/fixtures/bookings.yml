@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  service: 
+  user: 
+  booking_time: 2021-10-30 18:17:07
+
+two:
+  service: 
+  user: 
+  booking_time: 2021-10-30 18:17:07
