@@ -11,21 +11,23 @@
   </head>
 
   <body>
-    <header class="navbar navbar-fixed-top navbar-inverse">
-      <div class="container">
-        <%= link_to "CIA", '#', id: "logo" %>
-        <nav>
-          <ul class="nav navbar-nav navbar-right">
-            <li><%= link_to "Home",   '#' %></li>
-            <li><%= link_to "Bookings",   '#' %></li>
-            <li><%= link_to "Messages", '#' %></li>
-            <li><%= link_to "Logout", '#' %></li>
-          </ul>
-        </nav>
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">
+        Ceasars in Athens
+      </a>
+
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+
+      <div class="ml-auto">
+        <a class="navbar-text nav-item mr-3 text-white" href="/services"> Home </a>
+        <a class="navbar-text nav-item mr-3 text-white" href="/reviews"> Bookings </a>
+        <a class="navbar-text nav-item mr-3 text-white" href="#"> Messages </a>
+        <a class="navbar-text nav-item mr-3 text-white" href="#"> Logout </a>
       </div>
-    </header>
-    <div class="container">
-      <%= yield %>
-    </div>
+    </nav>
+    <%= yield %>
   </body>
 </html>
