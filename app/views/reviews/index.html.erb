@@ -2,7 +2,14 @@
 
 <h1>Reviews</h1>
 
-<table>
+<br>
+<div class="mx-auto text-center">
+  <a class="btn btn-outline-secondary btn-lg" href=/reviews/new role="button">Give a new review</a>
+</div>
+<br>
+
+<table class="table">
+<%# headers for the table %>
   <thead>
     <tr>
       <th>Service</th>
@@ -13,6 +20,7 @@
     </tr>
   </thead>
 
+  <%# content for the table %>
   <tbody>
     <% @reviews.each do |review| %>
       <tr>
@@ -30,4 +38,3 @@
 
 <br>
 
-<%= link_to 'New Review', new_review_path %>
