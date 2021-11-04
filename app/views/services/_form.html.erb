@@ -11,37 +11,53 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :availability %>
-    <%= form.text_field :availability %>
+
+  <div class="field form-group">
+    <label for="availability">Availability</label>
+    <input type="text" class="form-control" id="availability" placeholder="Ex. : 09/11/2021 to 10/11/2021">
+    <%#= form.label :availability #%>
+    <%#= form.text_field :availability #%>
   </div>
 
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_field :description %>
+  <div class="field form-group">
+    <label for="description">Description</label>
+    <input type="text" class="form-control" id="description" placeholder="Ex. : Dog-walking service in the evening in Goleta area">
+    <%#= form.label :description #%>
+    <%#= form.text_field :description #%>
   </div>
 
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
+  <div class="field form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control" id="title" placeholder="Ex. : Dog-walking">
+    <%#= form.label :title #%>
+    <%#= form.text_field :title #%>
   </div>
 
-  <div class="field">
-    <%= form.label :zipcode %>
-    <%= form.number_field :zipcode %>
+  <div class="field form-group">
+    <label for="zipcode">Zipcode</label>
+    <input type="text" class="form-control" id="zipcode" placeholder="Ex. : 93117">
+    <%#= form.label :zipcode #%>
+    <%#= form.number_field :zipcode #%>
   </div>
 
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
+  <div class="field form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control" id="title" placeholder="Ex. :  ">
+    <%#= form.label :title #%>
+    <%#= form.text_field :title #%>
   </div>
 
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id %>
+  <div class="field form-group">
+  <label for="user_id">User</label>
+  <input type="text" class="form-control" id="user_id" placeholder="Ex. : CoolPotatoe">
+    <%#= form.label :user_id #%>
+    <%#= form.text_field :user_id #%>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <%#= form.submit #%>
   </div>
 <% end %>
+
