@@ -11,27 +11,38 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :service_id %>
-    <%= form.text_field :service_id %>
-  </div>
 
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id %>
-  </div>
+  <div class="container-fluid">
+    <div class="field form-group">
+      <%= form.label :service_id %>
+      <div class="form-group">
+        <%= form.text_field :service_id %>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= form.label :rating %>
-    <%= form.number_field :rating %>
-  </div>
+    <div class="field form-group">
+      <%= form.label :user_id %>
+      <div class="form-group">
+        <%= form.text_field :user_id %>
+      </div>
+    </div>
+    
+    <div class="field form-group">
+      <%= form.label :rating %>
+      <div class="form-group">
+        <%= form.number_field :rating %>
+      </div>
+    </div>
+    
+    <div class="field form-group">
+      <%= form.label :review %>
+      <div class="form-group">
+        <%= form.text_field :review %>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= form.label :review %>
-    <%= form.text_field :review %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
+    <div class="actions text-center">
+      <%= form.submit %>
+    </div>
   </div>
 <% end %>

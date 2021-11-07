@@ -10,23 +10,31 @@
       </ul>
     </div>
   <% end %>
+  
+  <div class="container-fluid">
+    <div class="field form-group">
+      <%= form.label :username %>
+      <div class="form-group">
+        <%= form.text_field :username %>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= form.label :username %>
-    <%= form.text_field :username %>
-  </div>
+    <div class="field form-group">
+      <%= form.label :password %>
+      <div class="form-group">
+        <%= form.password_field :password %>
+      </div>
+    </div>
+    
+    <div class="field form-group">
+      <%= form.label :password_confirmation %>
+      <div class="form-group">
+        <%= form.password_field :password_confirmation %>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field :password %>
-  </div>
-
-  <div class="field">
-    <%= form.label :password_confirmation %>
-    <%= form.password_field :password_confirmation %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit "Register" %>
+    <div class="actions">
+      <%= form.submit "Register" %>
+    </div>
   </div>
 <% end %>

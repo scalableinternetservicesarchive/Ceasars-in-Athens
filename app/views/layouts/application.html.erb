@@ -11,6 +11,26 @@
   </head>
 
   <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">
+        Ceasars in Athens
+      </a>
+
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+      </form>
+      <%# make navbar dynamic for users and service providers %>
+      <div class="ml-auto">
+        <a class="navbar-text nav-item mr-3 text-white" href="/services"> Services </a>
+        <%# if current user %>
+          <a class="navbar-text nav-item mr-3 text-white" href="/reviews"> Reviews </a>
+          <a class="navbar-text nav-item mr-3 text-white" href="/login"> Logout </a>
+        <%# else %>
+          <%# a class="navbar-text nav-item mr-3 text-white" href="/login" Login /a%>
+        <%# end %>
+      </div>
+    </nav>
     <%= yield %>
   </body>
 </html>

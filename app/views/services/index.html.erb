@@ -1,23 +1,29 @@
 <p id="notice"><%= notice %></p>
-
 <h1>Services</h1>
 
-<table>
+<br>
+<div class="mx-auto text-center">
+  <a class="btn btn-outline-secondary btn-lg" href=/services/new role="button">Create a service</a>
+</div>
+<br>
+
+<table class="table">
   <thead>
     <tr>
-      <th>Availability</th>
-      <th>Description</th>
-      <th>Title</th>
-      <th>Zipcode</th>
-      <th>Title</th>
-      <th>User</th>
+      <th scope="col">Availability</th>
+      <th scope="col">Description</th>
+      <th scope="col">Title</th>
+      <th scope="col">Zipcode</th>
+      <th scope="col">Title</th>
+      <th scope="col">User</th>
       <th colspan="3"></th>
     </tr>
   </thead>
-
+  
   <tbody>
     <% @services.each do |service| %>
       <tr>
+        <th scope="row">1</th>
         <td><%= service.availability %></td>
         <td><%= service.description %></td>
         <td><%= service.title %></td>
@@ -34,4 +40,3 @@
 
 <br>
 
-<%= link_to 'New Service', new_service_path %>

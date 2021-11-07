@@ -11,37 +11,52 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :availability %>
-    <%= form.text_field :availability %>
-  </div>
+  <div class="container-fluid">
+    <div class="field form-group">
+      <%= form.label :availability %>
+      <div class="form-group">
+        <%= form.text_field :availability %>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_field :description %>
-  </div>
+    <div class="field form-group">
+      <%= form.label :description %>
+      <div class="form-group">
+        <%= form.text_field :description %>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
-  </div>
+    <div class="field form-group">
+      <%= form.label :title %>
+      <div class="form-group">
+        <%= form.text_field :title %>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= form.label :zipcode %>
-    <%= form.number_field :zipcode %>
-  </div>
+    <div class="field form-group">
+      <%= form.label :zipcode %>
+      <div class="form-group">
+        <%= form.number_field :zipcode %>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
-  </div>
+    <div class="field form-group">
+      <%= form.label :title %>
+      <div class="form-group">
+        <%= form.text_field :title %>
+      </div>
+    </div>
 
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id %>
-  </div>
+    <div class="field form-group">
+      <%= form.label :user_id %>
+      <div class="form-group">
+        <%= form.text_field :user_id %>
+      </div>
+    </div>
 
-  <div class="actions">
-    <%= form.submit %>
+    <div class="actions text-center">
+      <%= form.submit %>
+    </div>
   </div>
 <% end %>
+
