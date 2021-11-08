@@ -1,41 +1,37 @@
-<p id="notice"><%= notice %></p>
 <h1>Services</h1>
 
-<br>
 <div class="mx-auto text-center">
-  <a class="btn btn-outline-secondary btn-lg" href=/services/new role="button">Create a service</a>
+  <% if session[:user_id]  %>
+    <%= link_to 'Create a service', new_service_path, class: "btn btn-secondary" %>
+  <% else %>
+    <%= link_to 'Login to create service', login_path, class: "btn btn-secondary" %>
+  <% end %>  
 </div>
 <br>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Title</th>
-      <th scope="col">Description</th>
-      <th scope="col">Zipcode</th>
-      <th scope="col">Length of time</th>
-      <th scope="col">Service Provider</th>
-      <th scope="col">Book</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-  
-  <tbody>
+<div class="service-feed">
+  <ul class="list-group">
     <% @services.each do |service| %>
-      <tr>
-        <th scope="row">1</th>
-        <td><%= service.title %></td>
-        <td><%= service.description %></td>        
-        <td><%= service.zipcode %></td>
-        <td><%= service.length_of_time %></td>
-        <td><%= service.user_id %></td>
-        <td><%= link_to 'Show', service %></td>
-        <td><%= link_to 'Edit', edit_service_path(service) %></td>
-        <td><%= link_to 'Destroy', service, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+      <li class="list-group-item">
+        <%= link_to service do %>
+          <div class="service-feed-item">
+            <div class="service-feed-title">
+              <span><%= service.title %></span>            
+            </div>
+            <div class="service-feed-author">
+              <span><%= service.user.username %></span>
+            </div>
+            <div class="service-feed-created-at">
+              <span><%= service.created_at %></span>
+            </div>
+          </div>
+        <% end %>
+      </li>
     <% end %>
-  </tbody>
-</table>
-
+  </ul>
+  <div class="service-feed-nav">
+    <%== pagy_bootstrap_nav(@pagy) %>  
+  </div>
+</div>
 <br>
 

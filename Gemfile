@@ -20,6 +20,8 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'bootstrap', '~> 4.4.1'
 gem 'jquery-rails'
 
+gem 'pagy', '~> 5.2'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

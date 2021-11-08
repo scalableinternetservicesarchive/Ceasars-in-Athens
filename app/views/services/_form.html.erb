@@ -11,45 +11,30 @@
     </div>
   <% end %>
 
-  <div class="container-fluid">
-    <div class="field form-group">
-      <%= form.label :title %>
-      <div class="form-group">
-        <%= form.text_field :title %>
-      </div>
-    </div>
-
-    <div class="field form-group">
-      <%= form.label :description %>
-      <div class="form-group">
-        <%= form.text_field :description %>
-      </div>
-    </div>
-
-    <div class="field form-group">
-      <%= form.label :zipcode %>
-      <div class="form-group">
-        <%= form.number_field :zipcode %>
-      </div>
-    </div>
-
-    <div class="field form-group">
+<!--   <div class="form-group">
       <%= form.label :length_of_time %>
       <div class="form-group">
         <%= form.number_field :length_of_time %>
       </div>
-    </div>
+  </div> -->
 
-    <div class="field form-group">
-      <%= form.label :user_id %>
-      <div class="form-group">
-        <%= form.text_field :user_id %>
-      </div>
-    </div>
+  <div class="form-group">
+    <%= form.label :title, class: "control-label" %>
+    <%= form.text_field :title, placeholder: "What are you offering?", class: "form-control" %>
+  </div>
 
-    <div class="actions text-center">
-      <%= form.submit %>
-    </div>
+  <div class="form-group">
+    <%= form.label :description, class: "control-label" %>
+    <%= form.text_area :description, placeholder: "Some detailed information about your service..." ,class: "form-control" %>
+  </div>
+
+<!--   <div class="form-group">
+    <%= form.label :zipcode, class: "control-label" %>
+    <%= form.number_field :zipcode, class: "form-control" %>
+  </div> -->
+
+  <div class="actions text-center">
+    <%= form.submit class: "btn btn-success" %>
   </div>
 <% end %>
 

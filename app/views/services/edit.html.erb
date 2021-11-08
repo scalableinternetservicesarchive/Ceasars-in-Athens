@@ -1,6 +1,10 @@
 <h1>Editing Service</h1>
 
-<%= render 'form', service: @service %>
+<div class="mx-auto text-center">
+    <%= link_to 'Cancel', @service, class: "btn btn-secondary" %>
+    <%= link_to 'Delete', @service, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+</div>
 
-<%= link_to 'Show', @service %> |
-<%= link_to 'Back', services_path %>
+<div class='container'>
+    <%= render 'form', service: @service %>
+</div>
