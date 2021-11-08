@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @availability.user_id %>
+</p>
+
+<p>
+  <strong>Start:</strong>
+  <%= @availability.start %>
+</p>
+
+<p>
+  <strong>End:</strong>
+  <%= @availability.end %>
+</p>
+
+<p>
+  <strong>Is available:</strong>
+  <%= @availability.is_available %>
+</p>
+
+<p>
+  <strong>Is recurring:</strong>
+  <%= @availability.is_recurring %>
+</p>
+
+<%= link_to 'Edit', edit_availability_path(@availability) %> |
+<%= link_to 'Back', availabilities_path %>

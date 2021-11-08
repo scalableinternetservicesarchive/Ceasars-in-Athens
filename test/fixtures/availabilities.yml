@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  start: 2021-11-07 17:35:01
+  end: 2021-11-07 17:35:01
+  is_available: false
+  is_recurring: false
+
+two:
+  user: two
+  start: 2021-11-07 17:35:01
+  end: 2021-11-07 17:35:01
+  is_available: false
+  is_recurring: false
