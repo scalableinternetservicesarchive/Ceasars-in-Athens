@@ -2,17 +2,22 @@
 
 <p>
   <strong>Service:</strong>
-  <%= @booking.service %>
+  <%= @booking.service_id %>
 </p>
 
 <p>
   <strong>User:</strong>
-  <%= @booking.user %>
+  <%= @booking.user_id %>
 </p>
 
 <p>
-  <strong>Booking time:</strong>
-  <%= @booking.booking_time %>
+  <strong>Booking  Start time:</strong>
+  <%= @booking.booking_start_time %>
+</p>
+
+<p>
+  <strong>Booking End time:</strong>
+  <%= @booking.booking_end_time %>
 </p>
 
 <%= link_to 'Edit', edit_booking_path(@booking) %> |

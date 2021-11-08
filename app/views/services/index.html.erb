@@ -10,12 +10,12 @@
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">Availability</th>
+      <th scope="col">Title</th>
       <th scope="col">Description</th>
-      <th scope="col">Title</th>
       <th scope="col">Zipcode</th>
-      <th scope="col">Title</th>
-      <th scope="col">User</th>
+      <th scope="col">Length of time</th>
+      <th scope="col">Service Provider</th>
+      <th scope="col">Book</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -24,10 +24,10 @@
     <% @services.each do |service| %>
       <tr>
         <th scope="row">1</th>
-        <td><%= service.availability %></td>
-        <td><%= service.description %></td>
         <td><%= service.title %></td>
+        <td><%= service.description %></td>        
         <td><%= service.zipcode %></td>
+        <td><%= service.length_of_time %></td>
         <td><%= service.user_id %></td>
         <td><%= link_to 'Show', service %></td>
         <td><%= link_to 'Edit', edit_service_path(service) %></td>
