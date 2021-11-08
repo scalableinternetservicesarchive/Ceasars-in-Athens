@@ -13,9 +13,9 @@
 
   <div class="container-fluid">
     <div class="field form-group">
-      <%= form.label :availability %>
+      <%= form.label :length_of_time %>
       <div class="form-group">
-        <%= form.text_field :availability %>
+        <%= form.number_field :length_of_time %>
       </div>
     </div>
 
@@ -37,13 +37,6 @@
       <%= form.label :zipcode %>
       <div class="form-group">
         <%= form.number_field :zipcode %>
-      </div>
-    </div>
-
-    <div class="field form-group">
-      <%= form.label :title %>
-      <div class="form-group">
-        <%= form.text_field :title %>
       </div>
     </div>
 
