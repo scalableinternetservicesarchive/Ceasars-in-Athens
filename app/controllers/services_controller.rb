@@ -1,9 +1,13 @@
 class ServicesController < ApplicationController
+  include Pagy::Backend
+
   before_action :set_service, only: [:show, :edit, :update, :destroy]
+  before_action :require_login, only: [:create, :update, :destroy, :edit, :new]
+  before_action :require_ownership, only: [:update, :edit, :destroy]
 
   # GET /services
   def index
-    @services = Service.all
+    @pagy, @services = pagy(Service.order(created_at: :desc).all)
   end
 
   # GET /services/1
@@ -22,9 +26,10 @@ class ServicesController < ApplicationController
   # POST /services
   def create
     @service = Service.new(service_params)
+    @service.user_id = session[:user_id]
 
     if @service.save
-      redirect_to @service, notice: 'Service was successfully created.'
+      redirect_to @service, notice: 'Created service'
     else
       render :new
     end
@@ -33,7 +38,7 @@ class ServicesController < ApplicationController
   # PATCH/PUT /services/1
   def update
     if @service.update(service_params)
-      redirect_to @service, notice: 'Service was successfully updated.'
+      redirect_to @service, notice: 'Updated service'
     else
       render :edit
     end
@@ -42,17 +47,22 @@ class ServicesController < ApplicationController
   # DELETE /services/1
   def destroy
     @service.destroy
-    redirect_to services_url, notice: 'Service was successfully destroyed.'
+    redirect_to services_url, notice: 'Deleted service'
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+    def require_ownership 
+      if @service.user_id != session[:user_id]
+        flash[:error] = "Can only edit your own services"
+        redirect_to @service
+      end
+    end
+
     def set_service
       @service = Service.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def service_params
-      params.require(:service).permit(:availability, :description, :title, :zipcode, :title, :user_id)
+      params.require(:service).permit(:availability, :description, :title, :zipcode, :title)
     end
 end

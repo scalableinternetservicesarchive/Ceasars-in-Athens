@@ -1,15 +1,13 @@
 <%= form_for :login do |form| %>
-  <div class="field">
-    <%= form.label :username %>
-    <%= form.text_field :username %>
+  <div class="form-group">
+    <%= form.label :username, class: "control-label" %>
+    <%= form.text_field :username, class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field :password %>
+  <div class="form-group">
+    <%= form.label :password, class: "control-label" %>
+    <%= form.password_field :password, class: "form-control" %>
   </div>
 
-  <div class="actions">
-    <%= form.submit "Log in!" %>
-  </div>
+    <%= form.submit "Log in", class: "btn btn-default btn-primary" %>
 <% end %>

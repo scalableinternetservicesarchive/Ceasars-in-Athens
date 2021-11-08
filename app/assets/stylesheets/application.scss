@@ -15,6 +15,11 @@
  */
  @import "bootstrap";
 
- h1 {
-     text-align: center;
- }
+input:-webkit-autofill::first-line {
+    font-size: 1rem;
+    font-family: verdana, arial, helvetica, sans-serif;
+}
+
+textarea {
+  height: 400px !important;
+}

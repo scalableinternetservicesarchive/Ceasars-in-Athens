@@ -11,30 +11,22 @@
     </div>
   <% end %>
   
-  <div class="container-fluid">
-    <div class="field form-group">
-      <%= form.label :username %>
-      <div class="form-group">
-        <%= form.text_field :username %>
-      </div>
-    </div>
+  <div class="form-group text-center">
+    <%= form.label :username, class: "control-label" %>
+    <%= form.text_field :username, class: "form-control" %>
+  </div>
 
-    <div class="field form-group">
-      <%= form.label :password %>
-      <div class="form-group">
-        <%= form.password_field :password %>
-      </div>
-    </div>
-    
-    <div class="field form-group">
-      <%= form.label :password_confirmation %>
-      <div class="form-group">
-        <%= form.password_field :password_confirmation %>
-      </div>
-    </div>
+  <div class="form-group text-center">
+    <%= form.label :password, class: "control-label" %>
+    <%= form.password_field :password, class: "form-control" %>
+  </div>
+  
+  <div class="form-group text-center">
+    <%= form.label :password_confirmation, class: "control-label" %>
+    <%= form.password_field :password_confirmation, class: "form-control" %>
+  </div>
 
-    <div class="actions">
-      <%= form.submit "Register" %>
-    </div>
+  <div class="actions text-center">
+    <%= form.submit "Register", class: "btn btn-default btn-primary" %>
   </div>
 <% end %>

@@ -1,34 +1,22 @@
-<p id="notice"><%= notice %></p>
+<h1>Service</h1>
 
-<p>
-  <strong>Availability:</strong>
-  <%= @service.availability %>
-</p>
+<div class="mx-auto text-center">
+    <%= link_to 'Back', services_path, class: "btn btn-secondary" %>
+    <% if session[:user_id] == @service.user_id  %>
+      <%= link_to 'Edit', edit_service_path(@service), class: "btn btn-primary" %>
+    <% end %>
+</div>
 
-<p>
-  <strong>Description:</strong>
-  <%= @service.description %>
-</p>
-
-<p>
-  <strong>Title:</strong>
-  <%= @service.title %>
-</p>
-
-<p>
-  <strong>Zipcode:</strong>
-  <%= @service.zipcode %>
-</p>
-
-<p>
-  <strong>Title:</strong>
-  <%= @service.title %>
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @service.user_id %>
-</p>
-
-<%= link_to 'Edit', edit_service_path(@service) %> |
-<%= link_to 'Back', services_path %>
+<div class='service-container container'>
+  <div class='service-info'>
+    <div class='service-title'>
+      <%= @service.title %>
+    </div>
+    <div class='service-meta'>
+      Posted by <span class='service-author'><%= @service.user.username %></span> on <span class='service-created-at'><%= @service.created_at %></span>
+    </div>
+    <div class='service-description'>
+      <%= simple_format(@service.description) %>
+    </div>
+  </div>
+</div>
