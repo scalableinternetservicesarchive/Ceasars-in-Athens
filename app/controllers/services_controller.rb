@@ -7,7 +7,9 @@ class ServicesController < ApplicationController
 
   # GET /services
   def index
-    @pagy, @services = pagy(Service.order(created_at: :desc).all)
+    # @pagy, @services = pagy(Service.order(created_at: :desc).all)
+    @services = Service.all.order(created_at: :desc)
+    render json: @services, status: 200 
   end
 
   # GET /services/1
