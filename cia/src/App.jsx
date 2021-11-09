@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import MyRoutes from './components/navigation/Router';
+import MyRoutes from './elements/navigation/Router';
 import React from "react";
 
 
