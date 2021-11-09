@@ -20,10 +20,10 @@ services:
     container_name: frontend
     image: "node:14-alpine"
     user: "node"
-    working_dir: /cia
+    working_dir: /app/cia
     volumes: 
       - ./cia:/app/cia
-    command:  "yarn install  && yarn start"
+    command:  "yarn dev"
     depends_on:
       - web
     ports:
