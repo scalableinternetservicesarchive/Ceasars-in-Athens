@@ -16,4 +16,16 @@ services:
       - "3000:3000"
     volumes:
       - .:/app:delegated
+  frontend:
+    container_name: frontend
+    image: "node:14-alpine"
+    user: "node"
+    working_dir: /app/cia
+    volumes: 
+      - ./cia:/app/cia
+    command:  "yarn dev"
+    depends_on:
+      - web
+    ports:
+      - "3001:3001"
 version: '3'

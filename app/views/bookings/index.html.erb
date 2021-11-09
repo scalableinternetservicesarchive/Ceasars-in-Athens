@@ -13,9 +13,10 @@
   <tbody>
     <% @bookings.each do |booking| %>
       <tr>
-        <td><%= booking.service %></td>
-        <td><%= booking.user %></td>
-        <td><%= booking.booking_time %></td>
+        <td><%= booking.service_id %></td>
+        <td><%= booking.user_id %></td>
+        <td><%= booking.booking_start_time %></td>
+        <td><%= booking.booking_end_time %></td>
         <td><%= link_to 'Show', booking %></td>
         <td><%= link_to 'Edit', edit_booking_path(booking) %></td>
         <td><%= link_to 'Destroy', booking, method: :delete, data: { confirm: 'Are you sure?' } %></td>
