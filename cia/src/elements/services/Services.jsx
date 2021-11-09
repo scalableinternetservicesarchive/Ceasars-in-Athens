@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import { withRouter } from '../../helpers/WithRouter'
+import React, { Component } from 'react';
+import { withRouter } from '../../helpers/WithRouter';
+import API, { axiosConfig } from '../../helpers/client';
 
 
 class Services extends Component {
@@ -9,6 +10,11 @@ class Services extends Component {
         return(
             <h1>Hello World</h1>
         )
+    }
+    componentDidMount() {
+        API.get('/services').then(data => {
+            debugger
+        })
     }
 }
 
