@@ -1,10 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
-import Router from './pieces/Router';
+import myRoutes from './pieces/Router';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 function App() {
   return (
-    <Router />
+    <>
+      <myRoutes />
+      <h1>Hello</h1>
+    </>
   );
 }
 
