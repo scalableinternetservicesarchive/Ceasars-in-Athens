@@ -2,4 +2,8 @@
 
 <%= render 'form', booking: @booking %>
 
+<%= week_calendar(number_of_weeks: 1) do |date| %>
+    <%= date %>
+  <% end %>
+
 <%= link_to 'Back', bookings_path %>
