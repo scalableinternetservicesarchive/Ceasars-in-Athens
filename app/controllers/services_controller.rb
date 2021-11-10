@@ -21,6 +21,9 @@ class ServicesController < ApplicationController
 
   # GET /services/1
   def show
+    @service = Service.find(params[:id])
+    @username = User.find(@service.user_id).username
+    render json: {service: @service, username: @username}, status: 200
   end
 
   # GET /services/new
@@ -56,7 +59,7 @@ class ServicesController < ApplicationController
   # DELETE /services/1
   def destroy
     @service.destroy
-    redirect_to services_url, notice: 'Deleted service'
+    render status:200
   end
 
   private

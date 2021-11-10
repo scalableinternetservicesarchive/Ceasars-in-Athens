@@ -5,7 +5,7 @@ import API, { axiosConfig } from '../../helpers/client';
 
 import ServiceItem from './ServiceItem';
 
-import { List } from '@mui/material';
+import { List, Paper } from '@mui/material';
 
 class Services extends Component {
   constructor(props) {
@@ -25,12 +25,12 @@ class Services extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <Paper elevation='0' sx={{ padding: '100px' }}>
         <List
           style={{ width: '100%' }}>
           {this.renderServices()}
         </List>
-      </React.Fragment>
+      </Paper>
     )
   }
 

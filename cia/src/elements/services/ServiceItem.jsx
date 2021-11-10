@@ -31,7 +31,7 @@ class ServiceItem extends Component {
           </Grid>
           <Grid xs={12} item>
             <Typography key={`${this.props.entry.id}-description`} variant="body1">
-              {this.props.entry.description.substring(0, 250)}
+              {this.props.entry.description.substring(0, 250).replaceAll('\n', ' ')}
             </Typography>
           </Grid>
         </Grid>
