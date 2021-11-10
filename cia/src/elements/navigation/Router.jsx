@@ -5,7 +5,7 @@ import history from '../../helpers/history';
 import Services from "../services/Services";
 import ServiceEntry from "../services/ServiceEntry";
 import Bookings from "../bookings/Bookings";
-// import NewBooking from "../bookings/NewBooking";
+import NewBooking from "../bookings/NewBooking";
 import Login from "../user/Login";
 
 export default class MyRoutes extends Component {
@@ -22,7 +22,7 @@ export default class MyRoutes extends Component {
           <Route path="/services" element={<Services />} />
           <Route path="/services/:id" element={<ServiceEntry />} />
           <Route path="/bookings" element={<Bookings />} />
-          {/* <Route path="/bookings/new" element={<NewBooking />} /> */}
+          <Route path="/bookings/new" element={<NewBooking />} />
         </Routes>
         {/* </ScrollToTop> */}
       </Router>

@@ -19,7 +19,7 @@ export class BookingsProvider extends Component {
   async postBooking(event){
     return await API.post('/bookings/', event).then(
       (reply) => {
-        debugger
+        // debugger
       }).catch( (reply) => {
         window.alert('Something went wrong. Please try again.')
       })
@@ -28,14 +28,14 @@ export class BookingsProvider extends Component {
   async refresh(){
     await API.get('/bookings/').then( 
       (reply) => {
-        debugger
+        // debugger
         this.setState({
           bookings: reply.data.map( (data) => { return {start: new Date(data.booking_start_time), end: new Date(data.booking_end_time)}}),
           isLoading: false
         })
       }
     ).catch( (data) => {
-      debugger
+      // debugger
       console.log('Something went wrong.')
     })
   }
