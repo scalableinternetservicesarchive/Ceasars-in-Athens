@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from '../../helpers/WithRouter';
+// eslint-disable-next-line
 import API, { axiosConfig } from '../../helpers/client';
 
 import ServiceItem from './ServiceItem';
