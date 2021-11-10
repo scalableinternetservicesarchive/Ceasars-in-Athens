@@ -6,12 +6,10 @@ Rails.application.routes.draw do
 
   root to: 'services#index'
 
-  get '/register' => 'users#new'
-  post '/users' => 'users#create'
-
-  get '/login' => 'sessions#new'
-  post '/login' => 'sessions#create'
-
   delete "/logout" => 'sessions#destroy'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  post 'login', to: 'authentication#authenticate'
+  post 'register', to: 'users#create'
+  get 'checkuser', to: 'authentication#get_user'
+
 end

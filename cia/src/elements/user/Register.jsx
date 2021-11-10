@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import API, { axiosConfig } from '../../helpers/client';
-
 import {
   Button,
   TextField
 } from '@mui/material';
+import { UserContext } from '../../context/UserContext';
 
 class Register extends Component {
   constructor(props) {
@@ -17,16 +16,33 @@ class Register extends Component {
   }
 
   render() {
-    // debugger
-    console.log(this.props.location)
     return (
-      <React.Fragment>
+      <UserContext.Consumer>{ (userContext) => {
+        const {registerUser} = userContext
+
+        function _onSubmit(username, password, confirm) {
+          debugger
+          if (password !== confirm) {
+            throw Error("Password doesn't match")
+          }
+          
+          console.log("submit")
+          registerUser({username: username, password: password, password_confirmation: confirm })
+        }
+
+        function _onKeyPress(event) {
+          if (event.key === "Enter")
+            this._onSubmit()
+        }
+
+        return(
+          <React.Fragment>
         <TextField
           fullWidth
           label="Username"
           variant="outlined"
           onChange={event => { this.setState({ username: event.target.value }) }}
-          onKeyPress={event => { this._onKeyPress(event) }}
+          onKeyPress={event => { _onKeyPress(event) }}
         />
         <TextField
           fullWidth
@@ -34,19 +50,19 @@ class Register extends Component {
           label="Password"
           variant="outlined"
           onChange={event => { this.setState({ password: event.target.value }) }}
-          onKeyPress={event => { this._onKeyPress(event) }}
+          onKeyPress={event => { _onKeyPress(event) }}
         />
         <TextField
           fullWidth
           type="password"
           label="Confirm Password"
           variant="outlined"
-          onChange={event => { this.setState({ password: event.target.value }) }}
-          onKeyPress={event => { this._onKeyPress(event) }}
+          onChange={event => { this.setState({ confirm: event.target.value }) }}
+          onKeyPress={event => { _onKeyPress(event) }}
         />
         <Button
           fullWidth
-          onClick={event => { this._onSubmit() }}
+          onClick={event => { _onSubmit(this.state.username, this.state.password, this.state.confirm) }}
         > Register </Button>
         <Button
           fullWidth
@@ -54,24 +70,11 @@ class Register extends Component {
           onClick={event => { this.props.navigate('/login') }}
         > Create New Account </Button>
       </React.Fragment>
+        )
+      }
+        }</UserContext.Consumer>
     )
-  }
-
-  _onKeyPress(event) {
-    if (event.key === "Enter")
-      this._onSubmit()
-  }
-
-  _onSubmit() {
-    if (this.state.password != this.state.confirm) {
-      // password & confirm password doesn't match
-    }
-    // Call API to send login request
-    // API.get('/services').then(data => {
-    //     debugger
-    // })
-    console.log("submit")
-  }
+  }  
 }
 
 export default Register

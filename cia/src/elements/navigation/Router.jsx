@@ -12,7 +12,6 @@ import Register from "../user/Register";
 export default class MyRoutes extends Component {
   debugger
   render() {
-    console.log("hello")
 
     return (
       <Router history={history}>
