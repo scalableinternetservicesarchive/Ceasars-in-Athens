@@ -7,9 +7,15 @@ class ServicesController < ApplicationController
 
   # GET /services
   def index
-    # @pagy, @services = pagy(Service.order(created_at: :desc).all)
-    @services = Service.all.order(created_at: :desc)
-    render json: @services, status: 200 
+    @services = Service.select('"services".*, "users"."username"')
+        .joins('FULL OUTER JOIN "users" ON "users"."id" = "services"."user_id"')
+        .order(created_at: :desc)
+
+    if (params[:user_id] != nil)
+      @services = @services.where({user_id: params[:user_id]})
+    end
+
+    render json: @services, status: 200
   end
 
   # GET /services/1
