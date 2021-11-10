@@ -7,6 +7,7 @@ class ServicesController < ApplicationController
 
   # GET /services
   def index
+    # @pagy, @services = pagy(Service.order(created_at: :desc).all)
     @services = Service.select('"services".*, "users"."username"')
         .joins('FULL OUTER JOIN "users" ON "users"."id" = "services"."user_id"')
         .order(created_at: :desc)
