@@ -14,6 +14,7 @@ class ServiceItem extends Component {
   render() {
     return (
       <ListItemButton
+        onClick={(event) => this._onClick(event)}
         key={`${this.props.entry.id}-container`}
       >
         <Grid container columns={12}>
@@ -42,6 +43,9 @@ class ServiceItem extends Component {
     return event.toLocaleString().replace(',', '')
   }
 
+  _onClick(event) {
+    console.log('hi')
+  }
 }
 
 export default ServiceItem
