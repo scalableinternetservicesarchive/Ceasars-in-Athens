@@ -8,9 +8,9 @@ import BookingsProvider from './context/BookingsContext';
 
 function App() {
   return (
-    <BookingsProvider>
+    // <BookingsProvider>
       <MyRoutes/>
-    </BookingsProvider>
+    // </BookingsProvider>
   );
 }
 

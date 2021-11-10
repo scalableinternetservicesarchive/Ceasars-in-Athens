@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from '../../helpers/WithRouter';
 
 import {
   Grid,
@@ -43,9 +44,10 @@ class ServiceItem extends Component {
     return event.toLocaleString().replace(',', '')
   }
 
-  _onClick(event) {
-    console.log('hi')
+  _onClick(_event) {
+    console.log(this.props)
+    this.props.navigate(`/services/${this.props.entry.id}`)
   }
 }
 
-export default ServiceItem
+export default withRouter(ServiceItem)

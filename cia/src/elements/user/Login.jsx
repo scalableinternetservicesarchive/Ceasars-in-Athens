@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // eslint-disable-next-line
 import API, { axiosConfig } from '../../helpers/client';
+import { withRouter } from '../../helpers/WithRouter'
 
 import {
   Button,
@@ -40,6 +41,11 @@ class Login extends Component {
           fullWidth
           onClick={event => { this._onSubmit() }}
         > Log In </Button>
+        <Button
+          fullWidth
+          variant="text"
+          onClick={event => { this.props.navigate('/register') }}
+        > Create New Account </Button>
       </React.Fragment>
     )
   }
@@ -58,4 +64,4 @@ class Login extends Component {
   }
 }
 
-export default Login
+export default withRouter(Login)
