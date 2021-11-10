@@ -1,86 +1,63 @@
-// import React, { Component, useState } from 'react';
-// // eslint-disable-next-line
-// import API, { axiosConfig } from '../../helpers/client';
-// import 'date-fns';
-// // import React, { useState } from 'react';
-// import DateFnsUtils from '@date-io/date-fns';
-// import {
-//   MuiPickersUtilsProvider,
-//   KeyboardDatePicker
-// } from '@material-ui/pickers';
+import 'date-fns';
+import React, { useState } from 'react';
 
+import DateFnsUtils from '@date-io/date-fns';
+import Grid from '@material-ui/core/Grid';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDateTimePicker
+} from '@material-ui/pickers';
 
-// // import {
-// //   Button,
-// //   TextField
-// // } from '@mui/material';
+function NewBooking() {
 
-// class NewBooking extends Component {
-    
-//   constructor(props) {
-//     super(props)
-//     this.state = {
-//       booking_start_time: "",
-//       booking_end_time: "",
-//       create_booking: ""
-//     }
-//   }
+  const [StartDate, setStartDate] = useState(new Date());
+  const [EndDate, setEndDate] = useState(new Date());
 
-//   render() {
-//     // debugger
-//     console.log(this.props.location)
-//     const [selectedDate, setSelectedDate] = useState(new Date());
+  const handleStartDateChange = (date) => {
+    console.log(date);
+    setStartDate(date);
+  };
+  const handleEndDateChange = (date) => {
+    console.log(date);
+    setEndDate(date);
+  };
 
-//   const handleDateChange = (date) => {
-//     console.log(date);
-//     setSelectedDate(date);
-//   };
-//     return (
-//       <React.Fragment>
-//           <div> <MuiPickersUtilsProvider utils={DateFnsUtils}>
+  return (
+    <div className="NewBooking">
+        <h1>Create New Booking</h1>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} >
+            <Grid item xs={6}>
 
-// <KeyboardDatePicker
-//   label="Material Date Picker"
-//   value={selectedDate}
-//   onChange={handleDateChange}
-// />
+                <div >
+                    <h3>Booking Start Date and Time</h3>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDateTimePicker
+                        id="time-picker"
+                        variant="dialog"
+                        value={StartDate}
+                        minDate={new Date()}
+                        onChange={handleStartDateChange}
+                        />   
+                    </MuiPickersUtilsProvider>
+                </div>
+            </Grid>
+            <Grid item xs={6}> 
+                <div>
+                    <h3>Booking End Date and Time</h3>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDateTimePicker
+                        id="time-picker"
+                        variant="dialog"
+                        value={EndDate}
+                        minDate={StartDate}
+                        onChange={handleEndDateChange}
+                        />   
+                    </MuiPickersUtilsProvider>
+                </div>
+            </Grid>
+        </Grid>
+    </div>
+  );
+}
 
-// </MuiPickersUtilsProvider> 
-// </div>
-//         {/* <TextField
-//           fullWidth
-//           label="Booking Start Time"
-//           variant="outlined"
-//           onChange={event => { this.setState({ booking_start_time: event.target.value }) }}
-//           onKeyPress={event => { this._onKeyPress(event) }}
-//         />
-//         <TextField
-//           fullWidth
-//           label="Booking End Time"
-//           variant="outlined"
-//           onChange={event => { this.setState({ booking_end_time: event.target.value }) }}
-//           onKeyPress={event => { this._onKeyPress(event) }}
-//         />
-//         <Button
-//           fullWidth
-//           onClick={event => { this._onSubmit() }}
-//         > Create Booking </Button> */}
-//       </React.Fragment>
-//     )
-//   }
-
-//   _onKeyPress(event) {
-//     if (event.key === "Enter")
-//       this._onSubmit()
-//   }
-
-//   _onSubmit() {
-//     // TODO: Call API to add new booking
-//     // API.get('/bookings').then(data => {
-//     //     debugger
-//     // })
-//     console.log("submit")
-//   }
-// }
-
-// export default NewBooking
+export default NewBooking;

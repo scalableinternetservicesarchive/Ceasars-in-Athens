@@ -7,6 +7,7 @@ import {
   Button,
   TextField
 } from '@mui/material';
+import { UserContext } from '../../context/UserContext';
 
 class Login extends Component {
   constructor(props) {
@@ -18,16 +19,29 @@ class Login extends Component {
   }
 
   render() {
-    // debugger
-    console.log(this.props.location)
     return (
+      <UserContext.Consumer>{ (userContext) => {
+        const {loginUser, getUserInfo} = userContext
+
+        function _onKeyPress(event) {
+          if (event.key === "Enter")
+            _onSubmit()
+        }
+      
+        function _onSubmit(username, password) {
+          // Call API to post login request
+          console.log("submit")
+          loginUser({username: username, password: password})
+        }
+
+        return(
       <React.Fragment>
         <TextField
           fullWidth
           label="Username"
           variant="outlined"
           onChange={event => { this.setState({ username: event.target.value }) }}
-          onKeyPress={event => { this._onKeyPress(event) }}
+          onKeyPress={event => { _onKeyPress(event) }}
         />
         <TextField
           fullWidth
@@ -35,33 +49,20 @@ class Login extends Component {
           label="Password"
           variant="outlined"
           onChange={event => { this.setState({ password: event.target.value }) }}
-          onKeyPress={event => { this._onKeyPress(event) }}
+          onKeyPress={event => { _onKeyPress(event) }}
         />
         <Button
           fullWidth
-          onClick={event => { this._onSubmit() }}
+          onClick={event => { _onSubmit(this.state.username, this.state.password) }}
         > Log In </Button>
         <Button
           fullWidth
-          variant="text"
-          onClick={event => { this.props.navigate('/register') }}
-        > Create New Account </Button>
-      </React.Fragment>
-    )
-  }
-
-  _onKeyPress(event) {
-    if (event.key === "Enter")
-      this._onSubmit()
-  }
-
-  _onSubmit() {
-    // Call API to send login request
-    // API.get('/services').then(data => {
-    //     debugger
-    // })
-    console.log("submit")
-  }
+          onClick={event => { getUserInfo(localStorage.getItem("jwt")) }}
+        > Click Me for a Great Time </Button>
+      </React.Fragment>)
+      }
+  }</UserContext.Consumer>)
+}
 }
 
 export default withRouter(Login)

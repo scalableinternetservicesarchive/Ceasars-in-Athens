@@ -1,22 +1,28 @@
+require 'pry'
 class UsersController < ApplicationController
-  def new
-    @user = User.new
-  end
+  # skip_before_action :authorize_request, only: :create
 
-  # POST /users
+  # POST /api/signup
+  # return authenticated token at signup
   def create
-    @user = User.new(user_params)
-
-    if @user.save
-      redirect_to root_path, notice: 'Registered new account'
-    else
-      render :new
+    params = user_params
+    if (params['password'] != params['password_confirmation'])
+      return json_response({message: 'The passwords do not match.'}, :bad_request)
     end
+    begin
+      user = User.create!(params)
+    rescue ActiveRecord::RecordNotUnique => e
+      return json_response({ message: 'That username is taken.'}, :forbidden)
+    end
+    auth_token = AuthenticateUser.new(user.username, user.password).call
+    response = { message: Message.account_created, auth_token: auth_token }
+    json_response(response, :created)
   end
 
 
   private
     def user_params
-      params.require(:user).permit(:username, :password, :password_confirmation)
+      binding.pry
+      params.permit(:username, :password, :password_confirmation)
     end
 end
