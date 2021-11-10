@@ -48,6 +48,11 @@ class Register extends Component {
           fullWidth
           onClick={event => { this._onSubmit() }}
         > Register </Button>
+        <Button
+          fullWidth
+          variant="text"
+          onClick={event => { this.props.navigate('/login') }}
+        > Create New Account </Button>
       </React.Fragment>
     )
   }

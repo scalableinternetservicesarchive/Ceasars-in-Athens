@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from '../../helpers/WithRouter'
 
 
-class ServiceEntry extends Component {
+class ServicePage extends Component {
     render(){
         return(
             <h1>Single Entry </h1>
@@ -10,4 +10,4 @@ class ServiceEntry extends Component {
     }
 }
 
-export default withRouter(ServiceEntry)
+export default withRouter(ServicePage)
