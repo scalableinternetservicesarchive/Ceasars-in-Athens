@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2021_11_11_004701) do
     t.time "start_time"
     t.time "end_time"
     t.bigint "service_id", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["service_id"], name: "index_appointments_on_service_id"

@@ -2,11 +2,16 @@ require 'pry'
 
 class AppointmentsController < ApplicationController
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
+  before_action :set_service, only: [:index, :new, :create]
 
   # GET /appointments
   def index
-    @service = Service.find(params[:service_id])
-    @appointments = Appointment.all
+    if (session[:user_id] != @service.user.id)
+      @appointments = Appointment.all.order(:date, start_time: :desc)
+    else
+      @appointments = Appointment.where("user_id != null").order(:date, start_time: :desc)
+      @available = Appointment.where("user_id = null").order(:date, start_time: :desc)
+    end
   end
 
   # GET /appointments/1
@@ -18,6 +23,7 @@ class AppointmentsController < ApplicationController
 
   # GET /appointments/new
   def new
+    @appointment_arr = []
     @appointment = Appointment.new
   end
 
@@ -26,9 +32,9 @@ class AppointmentsController < ApplicationController
   end
 
   # POST /appointments
-  # Create Service
   def create
     @appointment_arr = []
+
     curr_date = Date.new(
       appointment_params["start_date(1i)"].to_i, 
       appointment_params["start_date(2i)"].to_i, 
@@ -58,14 +64,11 @@ class AppointmentsController < ApplicationController
         @appointment_arr << Appointment.create(
           date: curr_date, start_time: curr_time,
           end_time: curr_time + appointment_params[:duration].to_i, 
-          service_id: appointment_params[:service_id].to_i)
+          service_id: @service.id)
         curr_time += appointment_params[:duration].to_i*60
-        binding.pry
       end
       curr_date += 7*24*60*60
     end
-
-    render :new
   end
 
   # PATCH/PUT /appointments/1
@@ -87,6 +90,10 @@ class AppointmentsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_appointment
       @appointment = Appointment.find(params[:id])
+    end
+
+    def set_service
+      @service = Service.find(params[:service_id])
     end
 
     # Only allow a list of trusted parameters through.

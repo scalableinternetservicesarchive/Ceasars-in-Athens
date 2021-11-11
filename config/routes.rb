@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :appointments 
+  resources :appointments
   resources :availabilities
   resources :reviews
   resources :bookings
