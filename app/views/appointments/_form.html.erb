@@ -1,6 +1,6 @@
 <%= form_with(model: appointment) do |form| %>
   <% errors = [] %>
-  <% appointment.each { |a| errors << a.errors } %>
+  <% appointment_arr.each { |a| errors << a.errors } %>
   <% errors.flatten() %>
   <% if errors.length > 0 %>
     <div id="error_explanation">

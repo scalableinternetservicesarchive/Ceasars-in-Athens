@@ -5,11 +5,15 @@ class AppointmentsController < ApplicationController
 
   # GET /appointments
   def index
+    @service = Service.find(params[:service_id])
     @appointments = Appointment.all
   end
 
   # GET /appointments/1
   def show
+  end
+
+  def book
   end
 
   # GET /appointments/new
@@ -24,7 +28,7 @@ class AppointmentsController < ApplicationController
   # POST /appointments
   # Create Service
   def create
-    @appointment = []
+    @appointment_arr = []
     curr_date = Date.new(
       appointment_params["start_date(1i)"].to_i, 
       appointment_params["start_date(2i)"].to_i, 
@@ -51,11 +55,12 @@ class AppointmentsController < ApplicationController
     while curr_date <= end_date
       curr_time = start_time
       while curr_time <= end_time
-        @appointment << Appointment.create(
+        @appointment_arr << Appointment.create(
           date: curr_date, start_time: curr_time,
           end_time: curr_time + appointment_params[:duration].to_i, 
           service_id: appointment_params[:service_id].to_i)
         curr_time += appointment_params[:duration].to_i*60
+        binding.pry
       end
       curr_date += 7*24*60*60
     end
