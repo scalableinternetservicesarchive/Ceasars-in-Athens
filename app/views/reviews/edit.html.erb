@@ -1,6 +1,11 @@
 <h1>Editing Review</h1>
 
-<%= render 'form', review: @review %>
+<div class="mx-auto text-center">
+    <%= link_to 'Cancel', @review, class: "btn btn-secondary" %>
+    <%= link_to 'Delete', @review, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+</div>
 
-<%= link_to 'Show', @review %> |
+<div class='container'>
+    <%= render 'form', review: @review %>
+</div>
 <%= link_to 'Back', reviews_path %>
