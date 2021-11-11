@@ -1,3 +1,5 @@
+require 'pry'
+
 class AppointmentsController < ApplicationController
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
 
@@ -20,14 +22,45 @@ class AppointmentsController < ApplicationController
   end
 
   # POST /appointments
+  # Create Service
   def create
-    @appointment = Appointment.new(appointment_params)
-
-    if @appointment.save
-      redirect_to @appointment, notice: 'Appointment was successfully created.'
-    else
-      render :new
+    @appointment = []
+    curr_date = Date.new(
+      appointment_params["start_date(1i)"].to_i, 
+      appointment_params["start_date(2i)"].to_i, 
+      appointment_params["start_date(3i)"].to_i)
+    end_date = Date.new(
+      appointment_params["end_date(1i)"].to_i, 
+      appointment_params["end_date(2i)"].to_i, 
+      appointment_params["end_date(3i)"].to_i)
+    start_time = Time.new(
+      appointment_params["start_time(1i)"].to_i, 
+      appointment_params["start_time(2i)"].to_i, 
+      appointment_params["start_time(3i)"].to_i,
+      appointment_params["start_time(4i)"].to_i, 
+      appointment_params["start_time(5i)"].to_i
+    )
+    end_time = Time.new(
+      appointment_params["end_time(1i)"].to_i, 
+      appointment_params["end_time(2i)"].to_i, 
+      appointment_params["end_time(3i)"].to_i,
+      appointment_params["end_time(4i)"].to_i, 
+      appointment_params["end_time(5i)"].to_i
+    )
+      
+    while curr_date <= end_date
+      curr_time = start_time
+      while curr_time <= end_time
+        @appointment << Appointment.create(
+          date: curr_date, start_time: curr_time,
+          end_time: curr_time + appointment_params[:duration].to_i, 
+          service_id: appointment_params[:service_id].to_i)
+        curr_time += appointment_params[:duration].to_i*60
+      end
+      curr_date += 7*24*60*60
     end
+
+    render :new
   end
 
   # PATCH/PUT /appointments/1
@@ -53,6 +86,6 @@ class AppointmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def appointment_params
-      params.require(:appointment).permit(:date, :start_time, :end_time, :service_id, :user_id)
+      params.require(:appointment).permit(:start_date, :end_date, :start_time, :end_time, :duration, :service_id)
     end
 end

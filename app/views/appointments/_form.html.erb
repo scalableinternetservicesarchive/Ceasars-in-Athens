@@ -1,19 +1,27 @@
 <%= form_with(model: appointment) do |form| %>
-  <% if appointment.errors.any? %>
+  <% errors = [] %>
+  <% appointment.each { |a| errors << a.errors } %>
+  <% errors.flatten() %>
+  <% if errors.length > 0 %>
     <div id="error_explanation">
-      <h2><%= pluralize(appointment.errors.count, "error") %> prohibited this appointment from being saved:</h2>
+      <h2> An error occurred while generating appointments. </h2>
 
       <ul>
-        <% appointment.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+        <% errors.each do |error| %>
+          <li><%= error.full_messages %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
   <div class="field">
-    <%= form.label :date %>
-    <%= form.date_select :date %>
+    <%= form.label :start_date %>
+    <%= form.date_select :start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date %>
+    <%= form.date_select :end_date %>
   </div>
 
   <div class="field">
@@ -27,13 +35,8 @@
   </div>
 
   <div class="field">
-    <%= form.label :service_id %>
-    <%= form.text_field :service_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id %>
+    <%= form.label :duration %>
+    <%= form.text_field :duration %>
   </div>
 
   <div class="actions">
