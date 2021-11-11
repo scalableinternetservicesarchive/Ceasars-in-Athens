@@ -35,6 +35,18 @@ class AppointmentsController < ApplicationController
   def create
     @appointment_arr = []
 
+    required_keys = [
+      "start_date(1i)", "start_date(2i)", "start_date(3i)", 
+      "end_date(1i)", "end_date(2i)", "end_date(3i)", 
+      "start_time(1i)", "start_time(2i)", "start_time(3i)",
+      "start_time(4i)", "start_time(5i)", "end_time(1i)",
+      "end_time(2i)", "end_time(3i)", "end_time(4i)", 
+      "end_time(5i)", "duration"
+    ]
+    if !(appointment_params.keys - required_keys).empty?
+      render :new
+    end
+
     curr_date = Date.new(
       appointment_params["start_date(1i)"].to_i, 
       appointment_params["start_date(2i)"].to_i, 
@@ -69,6 +81,7 @@ class AppointmentsController < ApplicationController
       end
       curr_date += 7*24*60*60
     end
+    redirect_to service_appointments_url(@service), notice: 'Added appointments'
   end
 
   # PATCH/PUT /appointments/1

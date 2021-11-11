@@ -1,4 +1,4 @@
-<%= form_with(model: appointment, url: "/services/#{@service.id}/appointments") do |form| %>
+<%= form_with(model: appointment, url: service_appointments_url(@service)) do |form| %>
   <% errors = [] %>
   <% @appointment_arr.each { |a| errors << a.errors } %>
   <% errors.flatten() %>
