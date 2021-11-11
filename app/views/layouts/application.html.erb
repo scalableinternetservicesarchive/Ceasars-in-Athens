@@ -23,6 +23,7 @@
       <%# make navbar dynamic for users and service providers %>
       <div class="ml-auto">
         <a class="navbar-text nav-item mr-3 text-white" href="/services"> Services </a>
+        <a class="navbar-text nav-item mr-3 text-white" href="/reviews"> Ratings </a>
         <% if session[:user_id]  %>
           <%= link_to 'Logout', logout_path, method: :delete, class: "navbar-text nav-item mr-3 text-white" %>
         <% else %>
