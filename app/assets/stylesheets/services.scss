@@ -1,3 +1,70 @@
 // Place all the styles related to the services controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+h1 {
+    text-align: center;
+}
+
+a, a:visited {
+  color: black; 
+}
+
+.service-container {
+    padding-top: 1em;
+}
+
+.service-info {
+    
+}
+
+.service-title {
+    font-size: 26px;
+}
+
+.service-author {
+    color: dodgerblue;
+}
+
+.service-created-at {
+    color: gray;
+}
+
+.service-description {
+    padding-top: 1em;
+    padding-left: 1em;
+}
+
+
+.service-feed {
+    width: 80%;
+    padding-left: 20%;
+}
+
+.service-feed a:link { 
+    text-decoration:none; 
+}
+
+.service-feed-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+
+.service-feed-title {
+    font-size: 24px;
+    padding-bottom: 1em;
+}
+
+.service-feed-author {
+    float: right;
+    color: dodgerblue;
+    font-size: 14px;
+}
+
+.service-feed-created-at {
+    color: gray;
+}
+
+.service-feed-nav {
+    padding-top: 1em;
+}

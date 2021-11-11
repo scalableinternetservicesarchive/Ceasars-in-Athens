@@ -10,23 +10,23 @@
       </ul>
     </div>
   <% end %>
-
-  <div class="field">
-    <%= form.label :username %>
-    <%= form.text_field :username %>
+  
+  <div class="form-group text-center">
+    <%= form.label :username, class: "control-label" %>
+    <%= form.text_field :username, class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field :password %>
+  <div class="form-group text-center">
+    <%= form.label :password, class: "control-label" %>
+    <%= form.password_field :password, class: "form-control" %>
+  </div>
+  
+  <div class="form-group text-center">
+    <%= form.label :password_confirmation, class: "control-label" %>
+    <%= form.password_field :password_confirmation, class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= form.label :password_confirmation %>
-    <%= form.password_field :password_confirmation %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit "Register" %>
+  <div class="actions text-center">
+    <%= form.submit "Register", class: "btn btn-default btn-primary" %>
   </div>
 <% end %>

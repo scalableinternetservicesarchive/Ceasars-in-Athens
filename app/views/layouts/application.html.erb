@@ -11,6 +11,30 @@
   </head>
 
   <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">
+        Ceasars in Athens
+      </a>
+
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+      </form>
+      <%# make navbar dynamic for users and service providers %>
+      <div class="ml-auto">
+        <a class="navbar-text nav-item mr-3 text-white" href="/services"> Services </a>
+        <% if session[:user_id]  %>
+          <%= link_to 'Logout', logout_path, method: :delete, class: "navbar-text nav-item mr-3 text-white" %>
+        <% else %>
+          <%= link_to 'Login', login_path, class: "navbar-text nav-item mr-3 text-white" %>
+        <% end %>
+      </div>
+    </nav>
+    <% flash.each do |key, value| %>
+      <div class="<%= flash_class(key) %>">
+        <%= value %>
+      </div>
+    <% end %>    
     <%= yield %>
   </body>
 </html>

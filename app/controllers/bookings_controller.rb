@@ -1,3 +1,4 @@
+require 'pry'
 class BookingsController < ApplicationController
   before_action :set_booking, only: [:show, :edit, :update, :destroy]
 
@@ -53,6 +54,7 @@ class BookingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def booking_params
-      params.require(:booking).permit(:service, :user, :booking_time)
+      binding.pry
+      params.require(:booking).permit(:service_id, :user_id, :booking_start_time, :booking_end_time)
     end
 end
