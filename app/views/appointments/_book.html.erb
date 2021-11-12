@@ -11,7 +11,7 @@
   <ul class="list-group">
     <% @appointments.each do |appointment| %>
       <li class="list-group-item">
-        <%= link_to "#{appointment_path(appointment)}?service_id=#{@service.id}", 
+        <%= link_to "#{appointment_path(appointment)}?service_id=#{@service.id}&do_action=book", 
           method: :patch, data: {confirm: 'Book appointment?'} do %>
           <div class="appointment-feed-item">
             <div class="appointment-feed-date">

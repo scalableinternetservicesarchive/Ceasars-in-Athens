@@ -12,9 +12,9 @@ class AppointmentsController < ApplicationController
     if params[:service_id] != nil
       set_service()
       @appointments = Appointment.where(user_id: nil, service_id: @service.id)
-        .order(:date, start_time: :desc)
-      @booked = Appointment.where(user_id: true, service_id: @service.id)
-        .order(:date, start_time: :desc)
+        .order(:date, :start_time)
+      @booked = Appointment.where("user_id IS NOT NULL AND service_id = #{@service.id}")
+        .order(:date, :start_time)
     else
       @appointments = Appointment.where(user_id: session[:user_id]).order(:date, start_time: :desc)
       @booked = Appointment.select('"appointments".*, "services"."user_id"')
@@ -85,7 +85,7 @@ class AppointmentsController < ApplicationController
   # PATCH/PUT /appointments/1
   def update
     if params[:do_action] == "decline" && @appointment.update(user_id: nil)
-      redirect_to service_appointments_url(@service), notice: 'Appointment was declined.'
+      redirect_to request.referer, notice: 'Appointment was declined.'
     elsif params[:do_action] == "cancel" && @appointment.update(user_id: nil)
       redirect_to appointments_url, notice: 'Appointment was canceled.'
     elsif @appointment.update(user_id: session[:user_id])
@@ -98,7 +98,7 @@ class AppointmentsController < ApplicationController
   # DELETE /appointments/1
   def destroy
     @appointment.destroy
-    redirect_to service_appointments_url(@service), notice: 'Appointment was successfully deleted.'
+    redirect_to request.referer, notice: 'Appointment was successfully deleted.'
   end
 
   private
@@ -112,7 +112,9 @@ class AppointmentsController < ApplicationController
     end
 
     def require_ownership
-      if @service.user_id != session[:user_id] && @appointment.user_id != session[:user_id]
+      if params[:do_action] != 'book' && 
+        @service.user_id != session[:user_id] && 
+        @appointment.user_id != session[:user_id]
         flash[:error] = "Cannot cancel others' appointments"
         redirect_to request.referer
       end
