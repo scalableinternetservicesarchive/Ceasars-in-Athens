@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   root to: 'services#index'
 
   get '/register' => 'users#new'
-  post '/users' => 'users#create'
+  post '/register' => 'users#create'
 
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'
