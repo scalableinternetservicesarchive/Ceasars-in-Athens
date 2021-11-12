@@ -4,63 +4,80 @@
   <%= link_to "Back", request.referer.present? ? request.referer : root_path, class: "btn btn-secondary" %>
 </div>
 
-<h2>Appointments For Your Services</h2>
-<div class="service-feed">
+<br> 
+
+<h3>Appointments For Your Services</h3>
+<div class="appointments-feed">
   <ul class="list-group">
+    <% if @booked.empty? %>
+      <p> You have no booked appointments for your services. </p>
+    <% end %>
     <% @booked.each do |appointment| %>
       <li class="list-group-item">
-        <div class="appointment-feed-item">
-          <div class="appointment-feed-title">
-            <span><%= Service.find(appointment.service_id).title %></span>            
+        <div class="appointments-feed-item row align-items-center">
+          <div class="col">
+            <div class="appointments-feed-title">
+              <span><%= appointment.service.title %></span>            
+            </div>
+            <div class="appointments-feed-author">
+              <span>With: <%= User.find(appointment.user_id).username %> </span>            
+            </div>
+            <div class="appointments-feed-date">
+              <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+              <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+              <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+              <% end_time = appointment.end_time.strftime("%l:%M %P") %>
+              <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
+            </div>
           </div>
-          <div class="appointment-feed-date">
-            <span><%= appointment.date.to_s %></span>            
+          <div class="col-3 align-middle text-right">
+            <%= link_to 'Decline Appointment', 
+              "#{appointment_path(appointment)}?service_id=#{appointment.service_id}&do_action=decline", 
+              method: :patch, class: "btn btn-secondary btn-sm mb-3 btn-block",
+              data: {confirm: 'Are you sure you want to decline this appointment? This appointment slot will become available.'} %>
+            <%= link_to 'Cancel Appointment', 
+              "#{appointment_path(appointment)}?service_id=#{appointment.service_id}", 
+              method: :delete, class: "btn btn-danger btn-sm mt-3 btn-block",
+              data: {confirm: 'Are you sure you want to cancel this appointment? This slot is already booked.'} %>
           </div>
-          <div class="appointment-feed-start">
-            <span><%= appointment.start_time.strftime("%I:%M %p") %></span>
-          </div>
-          <div class="appointment-feed-end">
-            <span><%= appointment.end_time.strftime("%I:%M %p") %></span>
-          </div>
-          <div class="appointment-feed-client">
-            <span>Booked by: <%= User.find(appointment.user_id).username %></span>
-          </div>
-          <%= link_to 'Decline Appointment', 
-            "#{appointment_path(appointment)}?service_id=#{appointment.service_id}&do_action=decline", 
-            method: :patch, class: "btn btn-secondary",
-            data: {confirm: 'Are you sure you want to decline this appointment? This appointment slot will become available.'} %>
-          <%= link_to 'Cancel Appointment', 
-            "#{appointment_path(appointment)}?service_id=#{appointment.service_id}", 
-            method: :delete, class: "btn btn-danger",
-            data: {confirm: 'Are you sure you want to cancel this appointment? This slot is already booked.'} %>
+        </div>
       </li>
     <% end %>
   </ul>
 </div>
 
-<h2>Services You Booked</h2>
-<div class="service-feed">
+<br>
+
+<h3>Services You Booked</h3>
+<div class="appointments-feed">
   <ul class="list-group">
+    <% if @appointments.empty? %>
+      <p> You have no booked services. </p>
+    <% end %>
     <% @appointments.each do |appointment| %>
       <li class="list-group-item">
-        <div class="appointment-feed-item">
-          <div class="appointment-feed-title">
-            <span><%= Service.find(appointment.service_id).title %></span>            
+        <div class="appointments-feed-item row align-items-center">
+          <div class="col">
+            <div class="appointments-feed-title">
+              <span><%= appointment.service.title %></span>            
+            </div>
+            <div class="appointments-feed-author">
+              <span>With: <%= appointment.service.user.username %></span>            
+            </div>
+            <div class="appointments-feed-date">
+              <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+              <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+              <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+              <% end_time = appointment.end_time.strftime("%l:%M %P") %>
+              <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
+            </div>
           </div>
-          <div class="appointment-feed-date">
-            <span><%= appointment.date.to_s %></span>            
+          <div class="col-3 align-middle text-right">
+            <%= link_to 'Cancel Appointment', 
+              "#{appointment_path(appointment)}?service_id=#{appointment.service_id}&do_action=cancel", 
+              method: :patch, class: "btn btn-danger btn-sm mt-3 btn-block",
+              data: {confirm: 'Are you sure you want to cancel this appointment? This slot is already booked.'} %>
           </div>
-          <div class="appointment-feed-start">
-            <span><%= appointment.start_time.strftime("%I:%M %p") %></span>
-          </div>
-          <div class="appointment-feed-end">
-            <span><%= appointment.end_time.strftime("%I:%M %p") %></span>
-          </div>
-          <%= link_to 'Cancel Appointment', 
-            "#{appointment_path(appointment)}?service_id=#{appointment.service_id}&do_action=cancel", 
-            method: :patch, class: "btn btn-danger",
-            data: {confirm: 'Are you sure you want to cancel this appointment? This slot is already booked.'} %>
-        </div>
         </div>
       </li>
     <% end %>

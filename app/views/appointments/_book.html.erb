@@ -1,4 +1,4 @@
-<h1>Book Appointment</h1>
+<h1>Book Appointment for <%= @service.title %> </h1>
 
 <div class="mx-auto text-center">
   <%= link_to 'Back', @service, class: "btn btn-secondary" %>
@@ -14,14 +14,18 @@
         <%= link_to "#{appointment_path(appointment)}?service_id=#{@service.id}&do_action=book", 
           method: :patch, data: {confirm: 'Book appointment?'} do %>
           <div class="appointment-feed-item">
+            <div class="appointment-feed-title">
+              <span><%= @service.title %></span>            
+            </div>
+            <div class="appointment-feed-person">
+              <span>Booked With: <%= @service.user.username %></span>            
+            </div>
             <div class="appointment-feed-date">
-              <span><%= appointment.date.to_s %></span>            
-            </div>
-            <div class="appointment-feed-start">
-              <span><%= appointment.start_time.strftime("%I:%M %p") %></span>
-            </div>
-            <div class="appointment-feed-end">
-              <span><%= appointment.end_time.strftime("%I:%M %p") %></span>
+              <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+              <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+              <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+              <% end_time = appointment.end_time.strftime("%l:%M %P") %>
+              <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
             </div>
           </div>
         <% end %>

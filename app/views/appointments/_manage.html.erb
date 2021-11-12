@@ -1,24 +1,30 @@
-<h1>Manage Appointments</h1>
+<h1>Manage Appointments for <%= @service.title %></h1>
 
 <div class="mx-auto text-center">
   <%= link_to 'Back', @service, class: "btn btn-secondary" %>
   <%= link_to 'Generate Appointments', new_service_appointment_path(@service), class: "btn btn-primary" %>
 </div>
 
-<div class="service-feed">
-  <p>Booked Appointments</p>
+<br>
+
+<div class="appointments-feed">
+  <h3>Booked Appointments</h3>
   <ul class="list-group">
+    <% if @booked.empty? %>
+      <p> There are no booked appointments for this service at the moment. </p>
+    <% end %>
     <% @booked.each do |appointment| %>
       <li class="list-group-item">
         <div class="appointment-feed-item">
+          <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+          <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+          <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+          <% end_time = appointment.end_time.strftime("%l:%M %P") %>
           <div class="appointment-feed-date">
-            <span><%= appointment.date.to_s %></span>            
+            <span><%= date_str %></span>            
           </div>
-          <div class="appointment-feed-start">
-            <span><%= appointment.start_time.strftime("%I:%M %p") %></span>
-          </div>
-          <div class="appointment-feed-end">
-            <span><%= appointment.end_time.strftime("%I:%M %p") %></span>
+          <div class="appointment-feed-time">
+            <span><%= "#{start_time} - #{end_time}" %></span>
           </div>
           <div class="appointment-feed-client">
             <span>Booked by: <%= User.find(appointment.user_id).username %></span>
@@ -37,21 +43,27 @@
   </ul>
 </div>
 
-<div class="service-feed">
-  <p>Available Appointments</p>
+<br> 
+
+<div class="appointments-feed">
+  <h3>Available Appointments</h3>
   <ul class="list-group">
+    <% if @appointments.empty? %>
+      <p> There are no available appointment slots for this service at the moment. </p>
+    <% end %>
     <% @appointments.each do |appointment| %>
       <li class="list-group-item">
         <%= link_to appointment, method: :patch, data: {confirm: 'Are you sure?'} do %>
           <div class="appointment-feed-item">
+            <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+            <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+            <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+            <% end_time = appointment.end_time.strftime("%l:%M %P") %>
             <div class="appointment-feed-date">
-              <span><%= appointment.date.to_s %></span>            
+              <span><%= date_str %></span>            
             </div>
-            <div class="appointment-feed-start">
-              <span><%= appointment.start_time.strftime("%I:%M %p") %></span>
-            </div>
-            <div class="appointment-feed-end">
-              <span><%= appointment.end_time.strftime("%I:%M %p") %></span>
+            <div class="appointment-feed-time">
+              <span><%= "#{start_time} - #{end_time}" %></span>
             </div>
             <%= link_to 'Delete Availability', 
               "#{appointment_path(appointment)}?service_id=#{@service.id}", 
