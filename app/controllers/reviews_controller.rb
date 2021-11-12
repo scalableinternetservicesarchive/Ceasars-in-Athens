@@ -50,7 +50,7 @@ class ReviewsController < ApplicationController
   # DELETE /reviews/1
   def destroy
     @review.destroy
-    redirect_to reviews_url, notice: 'Review was successfully destroyed.'
+    redirect_to request.referer, notice: 'Review was successfully deleted.'
   end
 
   private
