@@ -4,10 +4,12 @@ class ReviewsController < ApplicationController
 
   before_action :set_review, only: [:show, :edit, :update, :destroy]
   before_action :set_service, only: [:index, :new, :create]
+  before_action :require_login, only: [:index, :update, :destroy, :edit, :new]
+  before_action :require_ownership, only: [:update, :destroy]
 
   # GET /reviews
   def index
-    @reviews = Review.order(created_at: :desc).all
+    @pagy, @reviews = pagy(Review.order(created_at: :desc).all)
   end
 
   # GET /reviews/1
@@ -16,7 +18,6 @@ class ReviewsController < ApplicationController
 
   # GET /reviews/new
   def new
-    @review_arr = []
     @review = Review.new
   end
 
@@ -53,6 +54,12 @@ class ReviewsController < ApplicationController
   end
 
   private
+    def require_ownership 
+      if @review.user_id != session[:user_id]
+        flash[:error] = "Can only edit your own review"
+        redirect_to @review
+      end
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_review
       @review = Review.find(params[:id])
