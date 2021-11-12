@@ -10,10 +10,15 @@ class AppointmentsController < ApplicationController
   def index
     if params[:service_id] != nil
       set_service()
-      @appointments = Appointment.where("user_id IS NULL").order(:date, start_time: :desc)
-      @booked = Appointment.where("user_id IS NOT NULL").order(:date, start_time: :desc)
+      @appointments = Appointment.where(user_id: nil, service_id: @service.id)
+        .order(:date, start_time: :desc)
+      @booked = Appointment.where(user_id: true, service_id: @service.id)
+        .order(:date, start_time: :desc)
     else
       @appointments = Appointment.where(user_id: session[:user_id]).order(:date, start_time: :desc)
+      @booked = Appointment.select('"appointments".*, "services"."user_id"')
+        .joins('FULL OUTER JOIN "services" ON "services"."id" = "appointments"."service_id"')
+        .where("\"services\".\"user_id\" = #{session[:user_id]} AND \"appointments\".\"user_id\" IS NOT NULL")
     end
   end
 
@@ -69,7 +74,7 @@ class AppointmentsController < ApplicationController
     while curr_time <= end_time
       @appointment_arr << Appointment.create(
         date: date, start_time: curr_time,
-        end_time: curr_time + appointment_params[:duration].to_i, 
+        end_time: curr_time + appointment_params[:duration].to_i*60, 
         service_id: @service.id)
       curr_time += appointment_params[:duration].to_i*60
     end

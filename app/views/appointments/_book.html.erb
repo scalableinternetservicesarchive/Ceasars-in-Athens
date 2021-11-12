@@ -1,12 +1,18 @@
+<h1>Book Appointment</h1>
+
 <div class="mx-auto text-center">
   <%= link_to 'Back', @service, class: "btn btn-secondary" %>
 </div>
 
 <div class="service-feed">
+  <% if @appointments.empty? %>
+    <p> There are no appointments available for this service at the moment. </p>
+  <% end %>
   <ul class="list-group">
     <% @appointments.each do |appointment| %>
       <li class="list-group-item">
-        <%= link_to appointment, method: :patch, data: {confirm: 'Book appointment?'} do %>
+        <%= link_to "#{appointment_path(appointment)}?service_id=#{@service.id}", 
+          method: :patch, data: {confirm: 'Book appointment?'} do %>
           <div class="appointment-feed-item">
             <div class="appointment-feed-date">
               <span><%= appointment.date.to_s %></span>            
