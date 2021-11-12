@@ -112,6 +112,10 @@ class AppointmentsController < ApplicationController
     end
 
     def require_ownership
+      if @service.user_id != session[:user_id] && @appointment.user_id != session[:user_id]
+        flash[:error] = "Cannot cancel others' appointments"
+        redirect_to request.referer
+      end
     end
 
     def require_service_ownership 
