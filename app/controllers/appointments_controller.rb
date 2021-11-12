@@ -4,7 +4,8 @@ class AppointmentsController < ApplicationController
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
   before_action :set_service, only: [:new, :create, :destroy, :update]
   before_action :require_login, only: [:index, :update, :destroy, :edit, :new]
-  before_action :require_ownership, only: [:new, :create, :destroy]
+  before_action :require_ownership, only: [:update, :destroy]
+  before_action :require_service_ownership, only: [:new, :create]
 
   # GET /appointments
   def index
@@ -83,7 +84,11 @@ class AppointmentsController < ApplicationController
 
   # PATCH/PUT /appointments/1
   def update
-    if @appointment.update(user_id: session[:user_id])
+    if params[:do_action] == "decline" && @appointment.update(user_id: nil)
+      redirect_to service_appointments_url(@service), notice: 'Appointment was declined.'
+    elsif params[:do_action] == "cancel" && @appointment.update(user_id: nil)
+      redirect_to appointments_url, notice: 'Appointment was canceled.'
+    elsif @appointment.update(user_id: session[:user_id])
       redirect_to appointments_url, notice: 'Appointment was successfully booked.'
     else
       redirect_to @service, notice: 'Appointment booking failed.'
@@ -106,8 +111,11 @@ class AppointmentsController < ApplicationController
       @service = Service.find(params[:service_id])
     end
 
-    def require_ownership 
-      if @service.user_id != session[:user_id]
+    def require_ownership
+    end
+
+    def require_service_ownership 
+      if @service.user_id != session[:user_id] 
         flash[:error] = "Can only edit your own services"
         redirect_to @service
       end
