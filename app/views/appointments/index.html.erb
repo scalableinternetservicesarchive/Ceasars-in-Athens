@@ -1,3 +1,12 @@
 <h1>Appointments</h1>
 
-<%= render 'book' %>
+<% if params[:service_id] != nil %>
+  <% if session[:user_id] == @service.user_id  %>
+    <%= render 'manage' %>
+  <% else %>
+    <%= render 'book' %>
+  <% end %>
+<% else %>
+  <%= render 'list' %>
+<% end %>
+

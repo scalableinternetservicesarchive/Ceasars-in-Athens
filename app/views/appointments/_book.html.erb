@@ -1,15 +1,12 @@
 <div class="mx-auto text-center">
   <%= link_to 'Back', @service, class: "btn btn-secondary" %>
-  <% if session[:user_id] == @service.user_id  %>
-    <%= link_to 'Generate Appointments', new_service_appointment_path(@service), class: "btn btn-primary" %>
-  <% end %>
 </div>
 
 <div class="service-feed">
   <ul class="list-group">
     <% @appointments.each do |appointment| %>
       <li class="list-group-item">
-        <%= link_to appointment, method: :patch, data: {confirm: 'Are you sure?'} do %>
+        <%= link_to appointment, method: :patch, data: {confirm: 'Book appointment?'} do %>
           <div class="appointment-feed-item">
             <div class="appointment-feed-date">
               <span><%= appointment.date.to_s %></span>            

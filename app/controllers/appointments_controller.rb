@@ -2,27 +2,23 @@ require 'pry'
 
 class AppointmentsController < ApplicationController
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
-  before_action :set_service, only: [:new, :create]
+  before_action :set_service, only: [:new, :create, :destroy, :update]
+  before_action :require_login, only: [:index, :update, :destroy, :edit, :new]
+  before_action :require_ownership, only: [:new, :create, :destroy]
 
   # GET /appointments
   def index
-    # binding.pry
     if params[:service_id] != nil
       set_service()
       @appointments = Appointment.where("user_id IS NULL").order(:date, start_time: :desc)
       @booked = Appointment.where("user_id IS NOT NULL").order(:date, start_time: :desc)
-    elsif session[:user_id] != nil
-      @appointments = Appointment.where(user_id: session[:user_id]).order(:date, start_time: :desc)
     else
-      appointments = []
+      @appointments = Appointment.where(user_id: session[:user_id]).order(:date, start_time: :desc)
     end
   end
 
   # GET /appointments/1
   def show
-  end
-
-  def book
   end
 
   # GET /appointments/new
@@ -92,7 +88,7 @@ class AppointmentsController < ApplicationController
   # DELETE /appointments/1
   def destroy
     @appointment.destroy
-    redirect_to appointments_url, notice: 'Appointment was successfully destroyed.'
+    redirect_to service_appointments_url(@service), notice: 'Appointment was successfully deleted.'
   end
 
   private
@@ -103,6 +99,13 @@ class AppointmentsController < ApplicationController
 
     def set_service
       @service = Service.find(params[:service_id])
+    end
+
+    def require_ownership 
+      if @service.user_id != session[:user_id]
+        flash[:error] = "Can only edit your own services"
+        redirect_to @service
+      end
     end
 
     # Only allow a list of trusted parameters through.
