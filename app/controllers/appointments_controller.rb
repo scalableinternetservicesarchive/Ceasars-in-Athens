@@ -2,15 +2,19 @@ require 'pry'
 
 class AppointmentsController < ApplicationController
   before_action :set_appointment, only: [:show, :edit, :update, :destroy]
-  before_action :set_service, only: [:index, :new, :create]
+  before_action :set_service, only: [:new, :create]
 
   # GET /appointments
   def index
-    if (session[:user_id] != @service.user.id)
-      @appointments = Appointment.all.order(:date, start_time: :desc)
+    # binding.pry
+    if params[:service_id] != nil
+      set_service()
+      @appointments = Appointment.where("user_id IS NULL").order(:date, start_time: :desc)
+      @booked = Appointment.where("user_id IS NOT NULL").order(:date, start_time: :desc)
+    elsif session[:user_id] != nil
+      @appointments = Appointment.where(user_id: session[:user_id]).order(:date, start_time: :desc)
     else
-      @appointments = Appointment.where("user_id != null").order(:date, start_time: :desc)
-      @available = Appointment.where("user_id = null").order(:date, start_time: :desc)
+      appointments = []
     end
   end
 
@@ -36,8 +40,7 @@ class AppointmentsController < ApplicationController
     @appointment_arr = []
 
     required_keys = [
-      "start_date(1i)", "start_date(2i)", "start_date(3i)", 
-      "end_date(1i)", "end_date(2i)", "end_date(3i)", 
+      "date(1i)", "date(2i)", "date(3i)", 
       "start_time(1i)", "start_time(2i)", "start_time(3i)",
       "start_time(4i)", "start_time(5i)", "end_time(1i)",
       "end_time(2i)", "end_time(3i)", "end_time(4i)", 
@@ -47,14 +50,10 @@ class AppointmentsController < ApplicationController
       render :new
     end
 
-    curr_date = Date.new(
-      appointment_params["start_date(1i)"].to_i, 
-      appointment_params["start_date(2i)"].to_i, 
-      appointment_params["start_date(3i)"].to_i)
-    end_date = Date.new(
-      appointment_params["end_date(1i)"].to_i, 
-      appointment_params["end_date(2i)"].to_i, 
-      appointment_params["end_date(3i)"].to_i)
+    date = Date.new(
+      appointment_params["date(1i)"].to_i, 
+      appointment_params["date(2i)"].to_i, 
+      appointment_params["date(3i)"].to_i)
     start_time = Time.new(
       appointment_params["start_time(1i)"].to_i, 
       appointment_params["start_time(2i)"].to_i, 
@@ -70,26 +69,23 @@ class AppointmentsController < ApplicationController
       appointment_params["end_time(5i)"].to_i
     )
       
-    while curr_date <= end_date
-      curr_time = start_time
-      while curr_time <= end_time
-        @appointment_arr << Appointment.create(
-          date: curr_date, start_time: curr_time,
-          end_time: curr_time + appointment_params[:duration].to_i, 
-          service_id: @service.id)
-        curr_time += appointment_params[:duration].to_i*60
-      end
-      curr_date += 7*24*60*60
+    curr_time = start_time
+    while curr_time <= end_time
+      @appointment_arr << Appointment.create(
+        date: date, start_time: curr_time,
+        end_time: curr_time + appointment_params[:duration].to_i, 
+        service_id: @service.id)
+      curr_time += appointment_params[:duration].to_i*60
     end
-    redirect_to service_appointments_url(@service), notice: 'Added appointments'
+    redirect_to service_appointments_url(@service), notice: 'Added appointment slots'
   end
 
   # PATCH/PUT /appointments/1
   def update
-    if @appointment.update(appointment_params)
-      redirect_to @appointment, notice: 'Appointment was successfully updated.'
+    if @appointment.update(user_id: session[:user_id])
+      redirect_to appointments_url, notice: 'Appointment was successfully booked.'
     else
-      render :edit
+      redirect_to @service, notice: 'Appointment booking failed.'
     end
   end
 
@@ -111,6 +107,6 @@ class AppointmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def appointment_params
-      params.require(:appointment).permit(:start_date, :end_date, :start_time, :end_time, :duration, :service_id)
+      params.require(:appointment).permit(:date, :start_time, :end_time, :duration, :service_id)
     end
 end
