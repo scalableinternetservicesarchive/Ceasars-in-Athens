@@ -1,0 +1,36 @@
+<h1>Book Appointment for <%= @service.title %> </h1>
+
+<div class="mx-auto text-center">
+  <%= link_to 'Back', @service, class: "btn btn-secondary" %>
+</div>
+
+<br> 
+
+<div class="appointments-feed">
+  <% if @appointments.empty? %>
+    <p> There are no appointments available for this service at the moment. </p>
+  <% end %>
+  <ul class="list-group">
+    <% @appointments.each do |appointment| %>
+      <li class="list-group-item border-0">
+        <%= link_to "#{appointment_path(appointment)}?service_id=#{@service.id}&do_action=book", 
+          method: :patch, class: "btn btn-outline-primary btn-lg btn-block", data: {confirm: 'Book appointment?'} do %>
+          <div class="appointments-feed-item">
+            <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+            <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+            <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+            <% end_time = appointment.end_time.strftime("%l:%M %P") %>
+            <div class="appointments-feed-date">
+              <span><%= "#{date_str}" %></span>            
+            </div>
+            <div class="appointments-feed-date">
+              <span><%= "#{start_time} - #{end_time}" %></span>            
+            </div>
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<br>

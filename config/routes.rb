@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
+  resources :appointments
   resources :availabilities
   resources :reviews
   resources :bookings
-  resources :services
+  resources :services do
+    resources :appointments
+  end
 
   root to: 'services#index'
 

@@ -4,7 +4,7 @@
   <% if session[:user_id]  %>
     <%= link_to 'Create a service', new_service_path, class: "btn btn-secondary" %>
   <% else %>
-    <%= link_to 'Login to create service', login_path, class: "btn btn-secondary" %>
+    <%= link_to 'Login to create and book services', login_path, class: "btn btn-secondary" %>
   <% end %>  
 </div>
 <br>
