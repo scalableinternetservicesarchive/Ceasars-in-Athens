@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   resources :availabilities
   resources :reviews
   resources :bookings
-  resources :services
+  resources :services do 
+    resources :reviews
+  end
 
   root to: 'services#index'
 

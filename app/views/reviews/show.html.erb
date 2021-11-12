@@ -1,19 +1,19 @@
-<h1>Review</h1>
+<p id="notice"><%= notice %></p>
 
-<div class="mx-auto text-center">
-    <%= link_to 'Back', reviews_path, class: "btn btn-secondary" %>
-    <% if session[:user_id] == @review.user_id  %>
-      <%= link_to 'Edit', edit_review_path(@review), class: "btn btn-primary" %>
-    <% end %>
-</div>
+<p>
+  <strong>User:</strong>
+  <%= @review.user_id %>
+</p>
 
-<div class='service-container container'>
-  <div class='service-info'>
-    <div class='service-meta'>
-      Posted by <span class='service-author'><%= @review.user.username %></span> on <span class='service-created-at'><%= @review.created_at %></span>
-    </div>
-    <div class='service-description'>
-      <%= simple_format(@review.review) %>
-    </div>
-  </div>
-</div>
+<p>
+  <strong>rating:</strong>
+  <%= @review.rating %>
+</p>
+
+<p>
+  <strong>review:</strong>
+  <%= @review.review %>
+</p>
+
+<%= link_to 'Edit', edit_review_path(@review) %> |
+<%= link_to 'Back', reviews_path %>

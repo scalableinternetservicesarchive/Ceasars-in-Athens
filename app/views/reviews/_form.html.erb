@@ -1,7 +1,7 @@
-<%= form_with(model: review) do |form| %>
+<%= form_with(model: review, url: service_reviews_url(@service)) do |form| %>
   <% if review.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(review.errors.count, "error") %> prohibited this review from being saved:</h2>
+      <h2><%= pluralize(review.errors.count, "error") %> prohibited this rating from being saved:</h2>
 
       <ul>
         <% review.errors.each do |error| %>
@@ -10,18 +10,18 @@
       </ul>
     </div>
   <% end %>
-  
-    <div class="form-group">
-      <%= form.label :rating, class: "control-label" %>
-      <%= form.number_field :rating, placeholder: "Rate the service 1 to 5", class: "form-control" %>
-    </div>
-  
-    <div class="form-group">
-      <%= form.label :review, class: "control-label" %>
-      <%= form.text_area :review, placeholder: "Some detailed description!" ,class: "form-control" %>
-    </div>
-  
-    <div class="actions text-center">
-      <%= form.submit class: "btn btn-success" %>
-    </div>
-  <% end %>
+
+  <div class="form-group">
+    <%= form.label :rating, class: "control-label" %>
+    <%= form.number_field :rating, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :review, class: "control-label" %>
+    <%= form.text_area :review, placeholder: "Some detailed description about your service..." ,class: "form-control" %>
+  </div>
+
+  <div class="actions text-center">
+    <%= form.submit class: "btn btn-success" %>
+  </div>
+<% end %>

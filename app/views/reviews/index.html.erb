@@ -1,35 +1,32 @@
 <h1>Reviews</h1>
 
 <div class="mx-auto text-center">
-  <% if session[:user_id]  %>
-    <%= link_to 'Create a review', new_review_path, class: "btn btn-secondary" %>
-  <% else %>
-    <%= link_to 'Login to create a review', login_path, class: "btn btn-secondary" %>
-  <% end %>  
+  <%= link_to 'Back', @service, class: "btn btn-secondary" %>
+  <% if session[:user_id] == @service.user_id  %>
+    <%= link_to 'Make a Review', new_service_review_path(@service), class: "btn btn-primary" %>
+  <% end %>
 </div>
-<br>
 
-<div class="service-feed">
-  <ul class="list-group">
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Rating</th>
+      <th>Review</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
     <% @reviews.each do |review| %>
-      <li class="list-group-item">
-        <%= link_to review do %>
-          <div class="service-feed-item">
-            <div class="service-feed-title">
-              <span><%= review.rating %></span>            
-            </div>
-            <div class="service-feed-author">
-              <span><%= review.review %></span>
-            </div>
-          </div>
-        <% end %>
-      </li>
+      <tr>
+        <td><%= review.user_id %></td>
+        <td><%= review.rating %></td>
+        <td><%= review.review %></td>
+      </tr>
     <% end %>
-  </ul>
-  <div class="service-feed-nav">
-    <%== pagy_bootstrap_nav(@pagy) %>  
-  </div>
-</div>
+  </tbody>
+</table>
 
 <br>
 
