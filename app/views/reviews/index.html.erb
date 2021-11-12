@@ -1,9 +1,11 @@
 <h1>Reviews</h1>
 
 <div class="mx-auto text-center">
-  <% if session[:user_id]  %>
-    <%= link_to 'Create a review', new_service_review_path(@service), class: "btn btn-secondary" %>
-  <% else %>
+  <%= link_to 'Back', @service, class: "btn btn-secondary" %>
+  <% if session[:user_id] && session[:user_id] != @service.user_id%>
+    <%= link_to 'Create a review', new_service_review_path(@service), class: "btn btn-primary" %>
+  <% end %>
+  <% if session[:user_id] == nil %>
     <%= link_to 'Login to create review', login_path, class: "btn btn-secondary" %>
   <% end %>  
 </div>
