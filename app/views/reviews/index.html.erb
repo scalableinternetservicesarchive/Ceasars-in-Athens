@@ -2,9 +2,7 @@
 
 <div class="mx-auto text-center">
   <%= link_to 'Back', @service, class: "btn btn-secondary" %>
-  <% if session[:user_id] == @service.user_id  %>
-    <%= link_to 'Make a Review', new_service_review_path(@service), class: "btn btn-primary" %>
-  <% end %>
+  <%= link_to 'Make a Review', new_service_review_path(@service), class: "btn btn-primary" %>
 </div>
 
 <table>
