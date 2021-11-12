@@ -92,7 +92,7 @@
         <request subst="true">
           <http 
             url="/logout" 
-            method="POST" 
+            method="DELETE" 
             version="1.1" 
             contents="_method=delete" 
             content_type="application/x-www-form-urlencoded" />
