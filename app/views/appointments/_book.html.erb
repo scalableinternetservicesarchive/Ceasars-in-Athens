@@ -4,28 +4,27 @@
   <%= link_to 'Back', @service, class: "btn btn-secondary" %>
 </div>
 
-<div class="service-feed">
+<br> 
+
+<div class="appointments-feed">
   <% if @appointments.empty? %>
     <p> There are no appointments available for this service at the moment. </p>
   <% end %>
   <ul class="list-group">
     <% @appointments.each do |appointment| %>
-      <li class="list-group-item">
+      <li class="list-group-item border-0">
         <%= link_to "#{appointment_path(appointment)}?service_id=#{@service.id}&do_action=book", 
-          method: :patch, data: {confirm: 'Book appointment?'} do %>
-          <div class="appointment-feed-item">
-            <div class="appointment-feed-title">
-              <span><%= @service.title %></span>            
+          method: :patch, class: "btn btn-outline-primary btn-lg btn-block", data: {confirm: 'Book appointment?'} do %>
+          <div class="appointments-feed-item">
+            <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+            <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+            <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+            <% end_time = appointment.end_time.strftime("%l:%M %P") %>
+            <div class="appointments-feed-date">
+              <span><%= "#{date_str}" %></span>            
             </div>
-            <div class="appointment-feed-person">
-              <span>Booked With: <%= @service.user.username %></span>            
-            </div>
-            <div class="appointment-feed-date">
-              <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
-              <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
-              <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
-              <% end_time = appointment.end_time.strftime("%l:%M %P") %>
-              <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
+            <div class="appointments-feed-date">
+              <span><%= "#{start_time} - #{end_time}" %></span>            
             </div>
           </div>
         <% end %>
