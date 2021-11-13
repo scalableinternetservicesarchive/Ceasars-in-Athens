@@ -2,12 +2,13 @@
 
 <div class="mx-auto text-center">
   <%= link_to 'Back', @service, class: "btn btn-secondary" %>
-  <% if session[:user_id] && session[:user_id] != @service.user_id%>
-    <%= link_to 'Create a review', new_service_review_path(@service), class: "btn btn-primary" %>
+  <% if session[:user_id] != @service.user_id%>
+    <% if session[:user_id] %>
+      <%= link_to 'Create a review', new_service_review_path(@service), class: "btn btn-primary" %>
+    <% else %>
+      <%= link_to 'Login to create review', login_path, class: "btn btn-secondary" %>
+    <% end %>
   <% end %>
-  <% if session[:user_id] == nil %>
-    <%= link_to 'Login to create review', login_path, class: "btn btn-secondary" %>
-  <% end %>  
 </div>
 <br>
 
