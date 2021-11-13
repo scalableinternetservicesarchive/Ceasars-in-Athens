@@ -9,7 +9,7 @@ class ReviewsController < ApplicationController
 
   # GET /reviews
   def index
-    @reviews = Review.order(created_at: :desc).all
+    @pagy, @reviews = pagy(Review.order(created_at: :desc).all)
   end
 
   # GET /reviews/1
