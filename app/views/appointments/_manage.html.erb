@@ -1,0 +1,85 @@
+<h1>Manage Appointments</h1>
+
+<div class="mx-auto text-center">
+  <%= link_to 'Back', @service, class: "btn btn-secondary" %>
+  <%= link_to 'Generate Appointments', new_service_appointment_path(@service), class: "btn btn-primary" %>
+</div>
+
+<br>
+
+<div class="appointments-feed">
+  <h3>Booked Appointments</h3>
+  <ul class="list-group">
+    <% if @booked.empty? %>
+      <p> There are no booked appointments for this service at the moment. </p>
+    <% end %>
+    <% @booked.each do |appointment| %>
+      <li class="list-group-item">
+        <div class="appointments-feed-item row align-items-center">
+          <div class="col">
+            <div class="appointments-feed-title">
+              <span><%= appointment.service.title %></span>            
+            </div>
+            <div class="appointments-feed-author">
+              <span>With: <%= User.find(appointment.user_id).username %> </span>            
+            </div>
+            <div class="appointments-feed-date">
+              <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+              <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+              <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+              <% end_time = appointment.end_time.strftime("%l:%M %P") %>
+              <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
+            </div>
+          </div>
+          <div class="col-3 align-middle text-right">
+            <%= link_to 'Decline Appointment', 
+              "#{appointment_path(appointment)}?service_id=#{@service.id}&do_action=decline", 
+              method: :patch, class: "btn btn-secondary btn-sm mb-3 btn-block",
+              data: {confirm: 'Are you sure you want to decline this appointment? This appointment slot will become available.'} %>
+            <%= link_to 'Cancel Appointment', 
+              "#{appointment_path(appointment)}?service_id=#{@service.id}", 
+              method: :delete, class: "btn btn-danger btn-sm mt-3 btn-block",
+              data: {confirm: 'Are you sure you want to cancel this appointment? This slot is already booked.'} %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<br> 
+
+<div class="appointments-feed">
+  <h3>Available Appointments</h3>
+  <ul class="list-group">
+    <% if @appointments.empty? %>
+      <p> There are no available appointment slots for this service at the moment. </p>
+    <% end %>
+    <% @appointments.each do |appointment| %>
+      <li class="list-group-item">
+        <div class="appointments-feed-item row align-items-center">
+          <div class="col">
+            <div class="appointments-feed-title">
+              <span><%= appointment.service.title %></span>            
+            </div>
+            <div class="appointments-feed-date">
+              <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+              <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+              <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+              <% end_time = appointment.end_time.strftime("%l:%M %P") %>
+              <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
+            </div>
+          </div>
+          <div class="col-3 align-middle text-right">
+            <%= link_to 'Delete Availability', 
+              "#{appointment_path(appointment)}?service_id=#{@service.id}", 
+              method: :delete, class: "btn btn-secondary btn-sm mt-3 btn-block",
+              data: {confirm: 'Are you sure you want to delete this appointment slot?'} %>
+            </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<br>

@@ -1,15 +1,17 @@
 Rails.application.routes.draw do
+  resources :appointments
   resources :availabilities
   resources :reviews
   resources :bookings
   resources :services do 
     resources :reviews
+    resources :appointments
   end
 
   root to: 'services#index'
 
   get '/register' => 'users#new'
-  post '/users' => 'users#create'
+  post '/register' => 'users#create'
 
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'

@@ -5,6 +5,9 @@
     <%= link_to 'See Ratings', service_reviews_url(@service), class: "btn btn-primary" %>
     <% if session[:user_id] == @service.user_id  %>
       <%= link_to 'Edit', edit_service_path(@service), class: "btn btn-primary" %>
+      <%= link_to 'Manage Appointments', service_appointments_url(@service), class: "btn btn-primary" %>
+    <% elsif session[:user_id] != nil %>
+      <%= link_to 'Book Appointment', service_appointments_url(@service), class: "btn btn-primary" %>
     <% end %>
 </div>
 
