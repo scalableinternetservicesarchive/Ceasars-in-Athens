@@ -7,7 +7,18 @@ class ServicesController < ApplicationController
 
   # GET /services
   def index
-    @pagy, @services = pagy(Service.order(created_at: :desc).all)
+    if params[:owned].present? 
+      if session[:user_id].present?
+        @all_services = false
+        @pagy, @services = pagy(Service.where(user_id: session[:user_id]).order(created_at: :desc).all)
+      else
+        flash[:error] = "Must be logged in to see owned services"
+        render :index
+      end
+    else
+      @all_services = true
+      @pagy, @services = pagy(Service.order(created_at: :desc).all)
+    end
   end
 
   # GET /services/1
