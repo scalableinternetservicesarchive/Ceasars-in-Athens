@@ -1,0 +1,10 @@
+<% if params[:service_id] != nil %>
+  <% if session[:user_id] == @service.user_id  %>
+    <%= render 'manage' %>
+  <% else %>
+    <%= render 'book' %>
+  <% end %>
+<% else %>
+  <%= render 'list' %>
+<% end %>
+

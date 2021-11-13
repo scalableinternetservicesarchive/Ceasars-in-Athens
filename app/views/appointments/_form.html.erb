@@ -1,0 +1,40 @@
+<%= form_with(model: appointment, url: service_appointments_url(@service)) do |form| %>
+  <% errors = [] %>
+  <% @appointment_arr.each { |a| errors << a.errors } %>
+  <% errors.flatten() %>
+  <% if errors.length > 0 %>
+    <div id="error_explanation">
+      <h2> An error occurred while generating appointments. </h2>
+
+      <ul>
+        <% errors.each do |error| %>
+          <li><%= error.full_messages %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :date %>
+    <%= form.date_select :date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_time %>
+    <%= form.time_select :start_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_time %>
+    <%= form.time_select :end_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :duration %>
+    <%= form.text_field :duration %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

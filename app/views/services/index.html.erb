@@ -2,9 +2,14 @@
 
 <div class="mx-auto text-center">
   <% if session[:user_id]  %>
+    <% if @all_services %>
+      <%= link_to 'View my services', services_path(:owned => true), class: "btn btn-secondary" %>
+    <% else %>
+      <%= link_to 'View all services', services_path, class: "btn btn-secondary" %>    
+    <% end %>
     <%= link_to 'Create a service', new_service_path, class: "btn btn-secondary" %>
   <% else %>
-    <%= link_to 'Login to create service', login_path, class: "btn btn-secondary" %>
+    <%= link_to 'Login to create and book services', login_path, class: "btn btn-secondary" %>
   <% end %>  
 </div>
 <br>

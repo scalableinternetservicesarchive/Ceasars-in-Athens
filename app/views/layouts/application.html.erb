@@ -22,6 +22,15 @@
       </form>
       <%# make navbar dynamic for users and service providers %>
       <div class="ml-auto">
+        <% if session[:user_id]  %>
+          <h5 class="navbar-text nav-item mr-3 text-white" >
+          <%= User.where(:id => session[:user_id]).pluck(:username).first %>
+          </h5>
+        <% end %>
+        <% if session[:user_id]  %>
+          <a class="navbar-text nav-item mr-3 text-white" href="/appointments"> My Appointments </a>
+        <% end %>
+        
         <a class="navbar-text nav-item mr-3 text-white" href="/services"> Services </a>
         <a class="navbar-text nav-item mr-3 text-white" href="/reviews"> Ratings </a>
         <% if session[:user_id]  %>

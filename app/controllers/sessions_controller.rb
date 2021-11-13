@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
     user = User.find_by(username: params[:login][:username])
     if user && user.authenticate(params[:login][:password])
       session[:user_id] = user.id
-      flash[:success] = "Logged in"
+      flash[:success] = "Logged in. Welcome #{params[:login][:username]}"
       redirect_to root_path
     else
       flash.now[:error] = "Invalid credentials"      
