@@ -6,7 +6,7 @@
   </clients>
 
   <servers>
-    <server host="kokinarimoto.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+    <server host="kerem.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
   </servers>
 
   <load>
@@ -80,8 +80,8 @@
             url="/login" 
             method="POST" 
             version="1.1" 
-            contents="user[username]=cia%%_random_user%%&amp;
-                user[password]=%%_user_password%%&amp;
+            contents="login[username]=cia%%_random_user%%&amp;
+                login[password]=%%_user_password%%&amp;
                 commit=Log in" 
             content_type="application/x-www-form-urlencoded" />
         </request>
