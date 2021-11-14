@@ -11,13 +11,6 @@
     </div>
   <% end %>
 
-<!--   <div class="form-group">
-      <%= form.label :length_of_time %>
-      <div class="form-group">
-        <%= form.number_field :length_of_time %>
-      </div>
-  </div> -->
-
   <div class="form-group">
     <%= form.label :title, class: "control-label" %>
     <%= form.text_field :title, placeholder: "What are you offering?", class: "form-control" %>
@@ -25,13 +18,8 @@
 
   <div class="form-group">
     <%= form.label :description, class: "control-label" %>
-    <%= form.text_area :description, placeholder: "Some detailed information about your service..." ,class: "form-control" %>
+    <%= form.text_area :description, placeholder: "Some detailed information about your service...", class: "form-control" %>
   </div>
-
-<!--   <div class="form-group">
-    <%= form.label :zipcode, class: "control-label" %>
-    <%= form.number_field :zipcode, class: "form-control" %>
-  </div> -->
 
   <div class="actions text-center">
     <%= form.submit class: "btn btn-success" %>

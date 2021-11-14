@@ -13,7 +13,7 @@
   <ul class="list-group">
     <% @appointments.each do |appointment| %>
       <li class="list-group-item border-0">
-        <%= link_to "#{appointment_path(appointment)}?service_id=#{@service.id}&do_action=book", 
+        <%= link_to service_appointment_path(appointment.service.id, appointment, :do_action => :book), 
           method: :patch, class: "btn btn-outline-primary btn-lg btn-block", data: {confirm: 'Book appointment?'} do %>
           <div class="appointments-feed-item">
             <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>

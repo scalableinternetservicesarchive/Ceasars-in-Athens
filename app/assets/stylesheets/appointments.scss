@@ -10,32 +10,20 @@ h3 {
   text-align: center;
 }
 
-p {
+.appointment-builder-container {
+  width: 450px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.appointment-empty-message {
   text-align: center;
-  font-size: 24px;
-}
-
-.appointments-container {
-  padding-top: 1em;
-}
-
-.appointments-title {
-  font-size: 26px;
-}
-
-.appointments-author {
-  color: dodgerblue;
-}
-
-.appointments-created-at {
-  color: gray;
 }
 
 .appointments-description {
   padding-top: 1em;
   padding-left: 1em;
 }
-
 
 .appointments-feed {
   width: 80%;
@@ -52,14 +40,32 @@ p {
   padding: 10px 15px;
 }
 
-.appointments-feed-title {
+.appointment {
+  position: relative;
+  height: 70px;
+}
+
+.appointment-buttons {
+  position: absolute;
+  right: 10px;
+  top: 0px;
+}
+
+.appointment-title {
   font-size: 22px;
   padding-bottom: 0.5em;
 }
 
-.appointments-feed-author {
+.appointment-author {
   font-size: 16px;
-  padding-bottom: 2em;
+  padding-bottom: 0.5em;
+  color: gray;
+}
+
+.appointment-date {
+  position: absolute;
+  bottom: 0px;
+  font-size: 14px;
   color: gray;
 }
 

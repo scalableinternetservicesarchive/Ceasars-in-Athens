@@ -1,40 +1,42 @@
-<%= form_with(model: appointment, url: service_appointments_url(@service)) do |form| %>
-  <% errors = [] %>
-  <% @appointment_arr.each { |a| errors << a.errors } %>
-  <% errors.flatten() %>
-  <% if errors.length > 0 %>
+<%= form_with(model: appointment_builder, url: service_appointments_url(@service)) do |form| %>
+  <br>
+  <% if appointment_builder.errors.any? %>
     <div id="error_explanation">
-      <h2> An error occurred while generating appointments. </h2>
+      <h2><%= pluralize(appointment_builder.errors.count, "error") %> prohibited appointments from being generated:</h2>
 
       <ul>
-        <% errors.each do |error| %>
-          <li><%= error.full_messages %></li>
+        <% appointment_builder.errors.each do |error| %>
+          <li><%= error.full_message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
-
-  <div class="field">
-    <%= form.label :date %>
-    <%= form.date_select :date %>
+  <div class="form-group">
+    <%= form.label :date, class: "control-label" %>
+    <% today = DateTime.now.strftime("%Y-%m-%d") %>
+    <%= date_field(:appointment_builder, :date, value: appointment_builder.date || today, min: today, class: "form-control") %>
   </div>
 
-  <div class="field">
-    <%= form.label :start_time %>
-    <%= form.time_select :start_time %>
+  <% now = (Time.now + 1.hours).beginning_of_hour %>
+  <% hour_later = now + 3.hours %>  
+  <% now_str = now.strftime("%H:%M") %>
+  <% hour_later_str = hour_later.strftime("%H:%M") %>
+  <div class="form-group">
+    <%= form.label :start_time, class: "control-label" %>
+    <%= time_field(:appointment_builder, :start_time, value: appointment_builder.start_time || now_str, include_seconds: false, class: "form-control") %>
   </div>
 
-  <div class="field">
-    <%= form.label :end_time %>
-    <%= form.time_select :end_time %>
+  <div class="form-group">
+    <%= form.label :end_time, class: "control-label" %>
+    <%= time_field(:appointment_builder, :end_time, value: appointment_builder.end_time || hour_later_str, include_seconds: false, class: "form-control") %>
   </div>
 
-  <div class="field">
-    <%= form.label :duration %>
-    <%= form.text_field :duration %>
+  <div class="form-group">
+    <%= form.label :duration, class: "control-label" %>
+    <%= form.select :duration, [["15 minutes", 15], ["30 minutes", 30], ["1 hour", 60], ["2 hours", 120]], {}, { class: "form-control" } %>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
+  <div class="actions text-center">
+    <%= form.submit "Generate appointments", class: "btn btn-success" %>
   </div>
 <% end %>

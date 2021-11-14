@@ -12,38 +12,36 @@
 </div>
 <br>
 
-<div class="service-feed">
+<div class="reviews">
   <ul class="list-group">
     <% @reviews.each do |review| %>
-      <% if @service.id == review.service_id  %>
       <li class="list-group-item">
-          <div class="service-feed-item">
-            <div class="review-feed-title">
-              <span><%= review.rating %> / 5 </span>            
-            </div>
-            <div class="review-feed-title">
-              <span><%= review.review %></span>
-            </div>
-            <div class="review-feed-author">
-              <span>Created by <%= review.user.username %></span>
-            </div>
-            <div class="service-feed-created-at">
-              <span><%= review.created_at%></span>
-            </div>
+        <div class="review">
+          <div class="review-rating">
+            <span><%= ("★" * review.rating) + ("☆" * (5 - review.rating)) %></span>            
           </div>
-          <% if session[:user_id] == review.user_id  %>
-            <div class="col-3 align-middle text-right">
-              <%= link_to 'Delete Review', 
-                "#{review_path(review)}?service_id=#{@service.id}", 
-                method: :delete, class: "btn btn-secondary btn-sm mt-3 btn-block",
-                data: {confirm: 'Are you sure you want to delete this review?'} %>
-            </div>
-          <% end %>
+          <div class="review-title">
+            <span><%= simple_format(review.review) %></span>
+          </div>
+          <div class="review-author-container">
+            <span>Left by <span class="review-author"><%= review.user.username %></span></span>
+          </div>
+          <div class="review-created-at">
+            <span><%= review.created_at%></span>
+          </div>
+        </div>
+        <% if session[:user_id] == review.user_id  %>
+          <div class="review-buttons">
+            <%= link_to 'Delete Review', 
+              service_review_path(@service, review),
+              method: :delete, class: "btn btn-danger btn-sm btn-block",
+              data: {confirm: 'Are you sure you want to delete this review?'} %>
+          </div>
+        <% end %>
       </li>
-      <% end %>
     <% end %>
   </ul>
-  <div class="service-feed-nav">
+  <div class="review-nav">
     <%== pagy_bootstrap_nav(@pagy) %>  
   </div>
 </div>

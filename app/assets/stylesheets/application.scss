@@ -15,11 +15,37 @@
  */
  @import "bootstrap";
 
-input:-webkit-autofill::first-line {
-    font-size: 1rem;
-    font-family: verdana, arial, helvetica, sans-serif;
-}
-
 textarea {
   height: 400px !important;
+}
+
+a.btn-secondary, 
+a:visited.btn-secondary,
+a.btn-primary,
+a:visited.btn-primary,
+a.btn-danger,
+a:visited.btn-danger {
+  color: white !important;
+}
+
+#error_explanation {
+  @extend .alert;
+  @extend .alert-danger;
+  padding: 0px;
+}
+
+#error_explanation h2 {
+  margin: 0px;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-size: 15px;
+}
+
+#error_explanation ul li {
+  font-size: 14px;
+}
+
+.field_with_errors {
+  @extend .form-control.is-invalid;
+  background-color: white;
 }

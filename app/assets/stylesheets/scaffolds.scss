@@ -26,10 +26,8 @@ td {
 
 #error_explanation {
   width: 450px;
-  border: 2px solid red;
   padding: 7px 7px 0;
-  margin-bottom: 20px;
-  background-color: #f0f0f0; }
+ }
 
 #error_explanation h2 {
   text-align: left;
@@ -43,7 +41,3 @@ td {
 #error_explanation ul li {
   font-size: 12px;
   list-style: square; }
-
-.btn {
-  color: white !important;
-}

@@ -1,14 +1,13 @@
-<h1>New Appointment</h1>
+<h1>Create Appointments</h1>
 
 <div class="mx-auto text-center">
     <%= link_to 'Cancel', service_appointments_url(@service), class: "btn btn-secondary" %>
 </div>
 
-<div class='container'>
+<div class='appointment-builder-container'>
   <% if session[:user_id] != @service.user.id %>
     <div>Not authorized to access resource</div>
   <% else %>
-    <%= render 'form', appointment: @appointment %>
+    <%= render 'form', appointment_builder: @appointment_builder %>
   <% end %>
 </div>
-

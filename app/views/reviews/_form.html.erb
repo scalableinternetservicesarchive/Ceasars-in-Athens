@@ -1,4 +1,5 @@
 <%= form_with(model: review, url: service_reviews_url(@service)) do |form| %>
+  <br>
   <% if review.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(review.errors.count, "error") %> prohibited this rating from being saved:</h2>
@@ -13,12 +14,19 @@
 
   <div class="form-group">
     <%= form.label :rating, class: "control-label" %>
-    <%= form.number_field :rating, min: 0, max: 5, class: "form-control" %>
+    <%= form.select :rating, [
+        ["☆☆☆☆☆", "0"], 
+        ["★☆☆☆☆", "1"], 
+        ["★★☆☆☆", "2"], 
+        ["★★★☆☆", "3"], 
+        ["★★★★☆", "4"], 
+        ["★★★★★", "5"]
+      ], { :include_blank => true }, { class: "form-control" } %>
   </div>
 
   <div class="form-group">
     <%= form.label :review, class: "control-label" %>
-    <%= form.text_area :review, placeholder: "Some detailed description about your service..." ,class: "form-control" %>
+    <%= form.text_area :review, placeholder: "Describe your experience...", class: "form-control" %>
   </div>
 
   <div class="actions text-center">

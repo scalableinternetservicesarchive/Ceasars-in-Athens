@@ -1,9 +1,9 @@
-require 'pry'
+include Pagy::Backend
 
 class AppointmentsController < ApplicationController
-  before_action :set_appointment, only: [:show, :edit, :update, :destroy]
+  before_action :set_appointment, only: [:update, :destroy]
   before_action :set_service, only: [:new, :create, :destroy, :update]
-  before_action :require_login, only: [:index, :update, :destroy, :edit, :new]
+  before_action :require_login, only: [:index, :update, :destroy, :new]
   before_action :require_ownership, only: [:update, :destroy]
   before_action :require_service_ownership, only: [:new, :create]
 
@@ -11,87 +11,104 @@ class AppointmentsController < ApplicationController
   def index
     if params[:service_id] != nil
       set_service()
-      @appointments = Appointment.where(user_id: nil, service_id: @service.id)
-        .order(:date, :start_time)
-      @booked = Appointment.where("user_id IS NOT NULL AND service_id = #{@service.id}")
-        .order(:date, :start_time)
-    else
-      @appointments = Appointment.where(user_id: session[:user_id]).order(:date, start_time: :desc)
-      @booked = Appointment.select('"appointments".*, "services"."user_id"')
-        .joins('FULL OUTER JOIN "services" ON "services"."id" = "appointments"."service_id"')
-        .where("\"services\".\"user_id\" = #{session[:user_id]} AND \"appointments\".\"user_id\" IS NOT NULL")
-    end
-  end
 
-  # GET /appointments/1
-  def show
+      @pagy_appointments, @appointments = pagy(
+        Appointment
+          .where(user_id: nil, service_id: @service.id)
+          .order(:date, :start_time),
+        page_param: :page_appts
+      )
+      @pagy_booked, @booked = pagy(
+        Appointment
+          .where(service_id: @service.id)
+          .where.not(user_id: nil)
+          .order(:date, :start_time),
+        page_param: :page_booked
+      )
+    else
+      # Appointments that the current user has made
+      @pagy_appointments, @appointments = pagy(
+        Appointment
+          .where(user_id: session[:user_id])
+          .order(:date, :start_time),
+        page_param: :page_appts
+      )
+      # Appointments to services belonging to the current user
+      @pagy_booked, @booked = pagy(
+        Appointment
+          .where.not(user_id: nil)
+          .includes(:service)
+          .references(:service)
+          .where('services.user_id = ?', session[:user_id])
+          .order("appointments.date", "appointments.start_time"),
+        page_param: :page_booked
+      )
+    end
   end
 
   # GET /appointments/new
-  def new
-    @appointment_arr = []
-    @appointment = Appointment.new
+  def new 
+    @appointment_builder = AppointmentBuilder.new
   end
 
-  # GET /appointments/1/edit
-  def edit
-  end
 
   # POST /appointments
   def create
-    @appointment_arr = []
+    @appointment_builder = AppointmentBuilder.new(appointment_builder_params)
+    if !(@appointment_builder.valid?)
+      render :new
+      return
+    end
 
-    required_keys = [
-      "date(1i)", "date(2i)", "date(3i)", 
-      "start_time(1i)", "start_time(2i)", "start_time(3i)",
-      "start_time(4i)", "start_time(5i)", "end_time(1i)",
-      "end_time(2i)", "end_time(3i)", "end_time(4i)", 
-      "end_time(5i)", "duration"
-    ]
-    if !(appointment_params.keys - required_keys).empty?
+    date = Time.parse(appointment_builder_params[:date], "%Y-%m-%d").utc
+    duration_mins = appointment_builder_params[:duration].to_i * 60
+
+    start_h, start_m = appointment_builder_params[:start_time].split('.').map(&:to_i)
+    end_h, end_m = appointment_builder_params[:end_time].split('.').map(&:to_i)
+
+    start_time = date.change({hour: start_h, min: start_m})
+    end_time = date.change({hour: end_h, min: end_m})
+
+    # @appointment_arr.errors.add(:date, "wasn't filled in")
+    # redirect_to service_appointments_url(@service), error: 'Test'
+
+    curr_time = start_time
+    while curr_time <= end_time - duration_mins
+      appt = Appointment.new(
+        date: date,
+        start_time: curr_time,
+        end_time: curr_time + duration_mins,
+        service_id: @service.id
+      )
+      if !appt.save
+        @appointment_builder.errors.merge!(appt)
+      end
+      curr_time += duration_mins
+    end
+    if @appointment_builder.errors.empty?
+      redirect_to service_appointments_url(@service), notice: 'Added appointment slots'
+    else
       render :new
     end
-
-    date = Date.new(
-      appointment_params["date(1i)"].to_i, 
-      appointment_params["date(2i)"].to_i, 
-      appointment_params["date(3i)"].to_i)
-    start_time = Time.new(
-      appointment_params["start_time(1i)"].to_i, 
-      appointment_params["start_time(2i)"].to_i, 
-      appointment_params["start_time(3i)"].to_i,
-      appointment_params["start_time(4i)"].to_i, 
-      appointment_params["start_time(5i)"].to_i
-    )
-    end_time = Time.new(
-      appointment_params["end_time(1i)"].to_i, 
-      appointment_params["end_time(2i)"].to_i, 
-      appointment_params["end_time(3i)"].to_i,
-      appointment_params["end_time(4i)"].to_i, 
-      appointment_params["end_time(5i)"].to_i
-    )
-      
-    curr_time = start_time
-    while curr_time <= end_time
-      @appointment_arr << Appointment.create(
-        date: date, start_time: curr_time,
-        end_time: curr_time + appointment_params[:duration].to_i*60, 
-        service_id: @service.id)
-      curr_time += appointment_params[:duration].to_i*60
-    end
-    redirect_to service_appointments_url(@service), notice: 'Added appointment slots'
   end
 
   # PATCH/PUT /appointments/1
   def update
-    if params[:do_action] == "decline" && @appointment.update(user_id: nil)
-      redirect_to request.referer, notice: 'Appointment was declined.'
-    elsif params[:do_action] == "cancel" && @appointment.update(user_id: nil)
-      redirect_to appointments_url, notice: 'Appointment was canceled.'
-    elsif @appointment.update(user_id: session[:user_id])
-      redirect_to appointments_url, notice: 'Appointment was successfully booked.'
+    case params[:do_action]
+      in "decline"
+        # Service provider declines a user's appointment, provider redirected to original page
+        @appointment.update(user_id: nil)
+        redirect_to request.referer, notice: 'Appointment was declined.'
+      in "cancel"
+        # User cancels an appointment, user redirected to My appointments page
+        @appointment.update(user_id: nil)
+        redirect_to appointments_url, notice: 'Appointment was canceled.'
+      in "book"
+        @appointment.update(user_id: session[:user_id])
+        redirect_to appointments_url, notice: 'Appointment was successfully booked.'
     else
-      redirect_to @service, notice: 'Appointment booking failed.'
+      flash[:error] = "Invalid action"
+      redirect_to request.referer
     end
   end
 
@@ -128,7 +145,7 @@ class AppointmentsController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-    def appointment_params
-      params.require(:appointment).permit(:date, :start_time, :end_time, :duration, :service_id)
+    def appointment_builder_params
+      params.require(:appointment_builder).permit(:date, :start_time, :end_time, :duration)
     end
 end
