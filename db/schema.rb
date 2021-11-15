@@ -17,8 +17,8 @@ ActiveRecord::Schema.define(version: 2021_11_13_215407) do
 
   create_table "appointments", force: :cascade do |t|
     t.date "date"
-    t.time "start_time"
-    t.time "end_time"
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.bigint "service_id", null: false
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
