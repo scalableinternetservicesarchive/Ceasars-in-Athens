@@ -15,24 +15,15 @@
         <ul class="list-group">
           <% @appointments_future.each do |appointment| %>
             <li class="list-group-item">
-                <div class="appointment">
-                  <div class="appointment-title">
-                    <span><%= appointment.service.title %></span>            
-                  </div>
-                  <div class="appointment-author">
-                    <span>With: <%= appointment.service.user.username %></span>          
-                  </div>
-                  <div class="appointment-date">
-                    <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
-                    <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
-                    <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
-                    <% end_time = appointment.end_time.strftime("%l:%M %P") %>
-                    <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
-                  </div>
-                  <div class="appointment-buttons">
+              <div class="appointment">
+                <%= render 'list_entry', appointment: appointment %>
+                <div class="appointment-buttons">
+                  <%= link_to 'Reschedule', 
+                    service_appointments_url(appointment.service.id, :reschedule => appointment.id), 
+                    class: "btn btn-secondary btn-sm btn-block" %>
                   <%= link_to 'Cancel', 
                     service_appointment_url(appointment.service.id, appointment, :do_action => :cancel), 
-                    method: :patch, class: "btn btn-danger btn-sm mt-3 btn-block",
+                    method: :patch, class: "btn btn-danger btn-sm btn-block",
                     data: {confirm: 'Are you sure you want to cancel this appointment? This will make this appointment slot available to other users.'} %>
                 </div>
               </div>
@@ -44,7 +35,6 @@
         </div>
       <% end %>
     </div>
-    <!-- need to test -->
     <div class="col-xl">
       <h3>Past Appointments</h3>
       <% if @appointments_past.empty? %>
@@ -54,19 +44,7 @@
           <% @appointments_past.each do |appointment| %>
             <li class="list-group-item">
               <div class="appointment">
-                <div class="appointment-title">
-                  <span><%= appointment.service.title %></span>            
-                </div>
-                <div class="appointment-author">
-                  <span>With: <%= appointment.service.user.username %></span>            
-                </div>
-                <div class="appointment-date">
-                  <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
-                  <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
-                  <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
-                  <% end_time = appointment.end_time.strftime("%l:%M %P") %>
-                  <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
-                </div>
+                <%= render 'list_entry', appointment: appointment %>
                 <div class="appointment-buttons">
                   <%= link_to 'Add Review', 
                     new_service_review_url(appointment.service), 

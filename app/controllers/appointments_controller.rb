@@ -16,7 +16,7 @@ class AppointmentsController < ApplicationController
       @pagy_appointments, @appointments = pagy(
         Appointment
           .where(user_id: nil, service_id: @service.id)
-          # .where('start_time >= ?', Time.now)
+          .where('start_time >= ?', Time.now)
           .order(:date, :start_time),
         page_param: :page_appts
       )
@@ -25,7 +25,7 @@ class AppointmentsController < ApplicationController
         Appointment
           .where(service_id: @service.id)
           .where.not(user_id: nil)
-          # .where('start_time >= ?', Time.now)
+          .where('start_time >= ?', Time.now)
           .order(:date, :start_time),
         page_param: :page_booked
       )
@@ -130,6 +130,10 @@ class AppointmentsController < ApplicationController
         redirect_to appointments_url, notice: 'Appointment was canceled.'
       in "book"
         @appointment.update(user_id: session[:user_id])
+        if (params[:reschedule] != nil)
+          appointment = Appointment.find(params[:reschedule])
+          appointment.update(user_id: nil)
+        end
         redirect_to appointments_url, notice: 'Appointment was successfully booked.'
     else
       flash[:error] = "Invalid action"

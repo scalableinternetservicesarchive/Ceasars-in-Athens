@@ -1,0 +1,13 @@
+<div class="appointment-title">
+  <span><%= appointment.service.title %></span>            
+</div>
+<div class="appointment-author">
+  <span>With: <%= appointment.service.user.username %></span>          
+</div>
+<div class="appointment-date">
+  <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+  <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+  <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+  <% end_time = appointment.end_time.strftime("%l:%M %P") %>
+  <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
+</div>

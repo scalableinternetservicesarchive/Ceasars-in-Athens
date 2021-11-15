@@ -1,0 +1,12 @@
+<div class="appointments-feed-item">
+  <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
+  <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
+  <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
+  <% end_time = appointment.end_time.strftime("%l:%M %P") %>
+  <div class="appointments-feed-date">
+    <span><%= "#{date_str}" %></span>            
+  </div>
+  <div class="appointments-feed-date">
+    <span><%= "#{start_time} - #{end_time}" %></span>            
+  </div>
+</div>
