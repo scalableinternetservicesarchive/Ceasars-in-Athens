@@ -1,8 +1,12 @@
 <h1>Manage Appointments</h1>
 
 <div class="mx-auto text-center">
-  <%= link_to 'Back', @service, class: "btn btn-secondary" %>
-  <%= link_to 'Generate Appointments', new_service_appointment_path(@service), class: "btn btn-primary" %>
+  <% if params[:service_id] != nil %>
+    <%= link_to 'Back', @service, class: "btn btn-secondary" %>
+    <%= link_to 'Generate Appointments', new_service_appointment_path(@service), class: "btn btn-primary" %>
+  <% else %>
+    <%= link_to 'Switch to Client View', appointments_url(), class: "btn btn-primary" %>
+  <% end %>
 </div>
 
 <br>
@@ -12,7 +16,9 @@
     <div class="col-xl">
       <h3>Booked Appointments</h3>
       <% if @booked.empty? %>
-        <p class="appointment-empty-message"> There are no booked appointments for this service at the moment. </p>
+        <p class="appointment-empty-message"> 
+          There are no booked appointments for <%= params[:service_id] != nil ? "this service" : "your services" %> at the moment. 
+        </p>
       <% else %>
         <ul class="list-group">
           <% @booked.each do |appointment| %>
@@ -53,7 +59,9 @@
     <div class="col-xl">
       <h3>Available Appointments</h3>
       <% if @appointments.empty? %>
-        <p class="appointment-empty-message"> There are no available appointment slots for this service at the moment. </p>
+        <p class="appointment-empty-message"> 
+          There are no available appointment slots for <%= params[:service_id] != nil ? "this service" : "your services" %> at the moment. 
+        </p>
       <% else %>
         <ul class="list-group">
           <% @appointments.each do |appointment| %>

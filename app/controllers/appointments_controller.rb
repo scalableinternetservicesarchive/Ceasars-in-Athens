@@ -12,26 +12,34 @@ class AppointmentsController < ApplicationController
     if params[:service_id] != nil
       set_service()
 
+      # Available appointments to book
       @pagy_appointments, @appointments = pagy(
         Appointment
           .where(user_id: nil, service_id: @service.id)
+          # .where('start_time >= ?', Time.now)
           .order(:date, :start_time),
         page_param: :page_appts
       )
+      # Appointments already booked by clients
       @pagy_booked, @booked = pagy(
         Appointment
           .where(service_id: @service.id)
           .where.not(user_id: nil)
+          # .where('start_time >= ?', Time.now)
           .order(:date, :start_time),
         page_param: :page_booked
       )
-    else
-      # Appointments that the current user has made
+    elsif params[:view] == "provider"
+      # Available appointment slots for services belonging to user
       @pagy_appointments, @appointments = pagy(
         Appointment
-          .where(user_id: session[:user_id])
-          .order(:date, :start_time),
-        page_param: :page_appts
+          .where(user_id: nil)
+          .includes(:service)
+          .references(:service)
+          .where('services.user_id = ?', session[:user_id])
+          .where('start_time >= ?', Time.now)
+          .order("appointments.date", "appointments.start_time"),
+        page_param: :page_booked
       )
       # Appointments to services belonging to the current user
       @pagy_booked, @booked = pagy(
@@ -40,8 +48,25 @@ class AppointmentsController < ApplicationController
           .includes(:service)
           .references(:service)
           .where('services.user_id = ?', session[:user_id])
+          .where('start_time >= ?', Time.now)
           .order("appointments.date", "appointments.start_time"),
         page_param: :page_booked
+      )
+    else 
+      # Appointments that the current user has made
+      @pagy_appointments_future, @appointments_future = pagy(
+        Appointment
+          .where(user_id: session[:user_id])
+          .where('start_time >= ?', Time.now)
+          .order(:date, :start_time),
+        page_param: :page_appts_future
+      )
+      @pagy_appointments_past, @appointments_past = pagy(
+        Appointment
+          .where(user_id: session[:user_id])
+          .where('start_time < ?', Time.now)
+          .order(:date, :start_time),
+        page_param: :page_appts_past
       )
     end
   end
