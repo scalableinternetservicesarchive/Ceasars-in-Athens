@@ -16,7 +16,7 @@ class AppointmentsController < ApplicationController
       @pagy_appointments, @appointments = pagy(
         Appointment
           .where(user_id: nil, service_id: @service.id)
-          # .where('start_time >= ?', now)
+          .where('start_time >= ?', now)
           .order(:date, :start_time),
         page_param: :page_appts
       )
@@ -25,7 +25,7 @@ class AppointmentsController < ApplicationController
         Appointment
           .where(service_id: @service.id)
           .where.not(user_id: nil)
-          # .where('start_time >= ?', now)
+          .where('start_time >= ?', now)
           .order(:date, :start_time),
         page_param: :page_booked
       )
