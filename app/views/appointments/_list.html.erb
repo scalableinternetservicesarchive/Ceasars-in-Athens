@@ -1,83 +1,65 @@
 <h1>My Appointments</h1>
+
+<div class="mx-auto text-center">
+  <%= link_to 'Switch to Service Provider View', appointments_url(:view => :provider), class: "btn btn-primary" %>
+</div>
 <br> 
 
 <div class="container-xl">
   <div class="row">
     <div class="col-xl">
-      <h3>Appointments For Your Services</h3>
-      <% if @booked.empty? %>
-        <p class="appointment-empty-message"> You have no booked appointments for your services. </p>
+      <h3>Upcoming Appointments</h3>
+      <% if @appointments_future.empty? %>
+        <p class="appointment-empty-message"> You have no upcoming appointments booked for other services. </p>
       <% else %>
         <ul class="list-group">
-          <% @booked.each do |appointment| %>
+          <% @appointments_future.each do |appointment| %>
             <li class="list-group-item">
+              <%= link_to appointment.service do %>
                 <div class="appointment">
-                  <div class="appointment-title">
-                    <span><%= appointment.service.title %></span>            
-                  </div>
-                  <div class="appointment-author">
-                    <span>With: <%= User.find(appointment.user_id).username %> </span>            
-                  </div>
-                  <div class="appointment-date">
-                    <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
-                    <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
-                    <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
-                    <% end_time = appointment.end_time.strftime("%l:%M %P") %>
-                    <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
-                  </div>
+                  <%= render 'list_entry', appointment: appointment %>
                   <div class="appointment-buttons">
-                  <%= link_to 'Decline', 
-                    service_appointment_path(appointment.service.id, appointment, :do_action => :decline),
-                    method: :patch, class: "btn btn-secondary btn-sm btn-block",
-                    data: {confirm: 'Are you sure you want to decline this appointment? This appointment slot will become available.'} %>
-                  <%= link_to 'Delete', 
-                    service_appointment_path(appointment.service.id, appointment), 
-                    method: :delete, class: "btn btn-danger btn-sm btn-block",
-                    data: {confirm: 'Are you sure you want to cancel this appointment? This slot is already booked and will be removed.'} %>
+                    <%= link_to 'Reschedule', 
+                      service_appointments_url(appointment.service.id, :reschedule => appointment.id), 
+                      class: "btn btn-secondary btn-sm btn-block" %>
+                    <%= link_to 'Cancel', 
+                      service_appointment_url(appointment.service.id, appointment, :do_action => :cancel), 
+                      method: :patch, class: "btn btn-danger btn-sm btn-block",
+                      data: {confirm: 'Are you sure you want to cancel this appointment? This will make this appointment slot available to other users.'} %>
+                  </div>
                 </div>
-              </div>
+              <% end %>
             </li>
           <% end %>
         </ul>
         <div class="service-feed-nav">
-          <%== pagy_bootstrap_nav(@pagy_booked) %>
+          <%== pagy_bootstrap_nav(@pagy_appointments_future) %>
         </div>
       <% end %>
     </div>
     <div class="col-xl">
-      <h3>Services You Booked</h3>
-      <% if @appointments.empty? %>
-        <p class="appointment-empty-message"> You have no booked appointments for your services. </p>
+      <h3>Past Appointments</h3>
+      <% if @appointments_past.empty? %>
+        <p class="appointment-empty-message"> You have no past appointments for other services. </p>
       <% else %>
         <ul class="list-group">
-          <% @appointments.each do |appointment| %>
+          <% @appointments_past.each do |appointment| %>
             <li class="list-group-item">
-              <div class="appointment">
-                <div class="appointment-title">
-                  <span><%= appointment.service.title %></span>            
+              <%= link_to appointment.service do %>
+                <div class="appointment">
+                  <%= render 'list_entry', appointment: appointment %>
+                  <div class="appointment-buttons">
+                    <%= link_to 'Add Review', 
+                      new_service_review_url(appointment.service), 
+                      class: "btn btn-primary btn-sm mt-3 btn-block" %>
+                  </div>
                 </div>
-                <div class="appointment-author">
-                  <span>With: <%= appointment.service.user.username %></span>            
-                </div>
-                <div class="appointment-date">
-                  <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
-                  <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
-                  <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
-                  <% end_time = appointment.end_time.strftime("%l:%M %P") %>
-                  <span><%= "#{date_str} • #{start_time} - #{end_time}" %></span>            
-                </div>
-                <div class="appointment-buttons">
-                  <%= link_to 'Cancel', 
-                    service_appointment_url(appointment.service.id, appointment, :do_action => :cancel), 
-                    method: :patch, class: "btn btn-danger btn-sm mt-3 btn-block",
-                    data: {confirm: 'Are you sure you want to cancel this appointment? This slot is already booked.'} %>
-                </div>
-              </div>
+              <% end %>
             </li>
           <% end %>
         </ul>
         <div class="service-feed-nav">
-          <%== pagy_bootstrap_nav(@pagy_appointments) %>  
+          <%== pagy_bootstrap_nav(@pagy_appointments_past) %>  
         </div>
       <% end %>
     </div>

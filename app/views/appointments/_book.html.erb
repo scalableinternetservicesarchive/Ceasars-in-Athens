@@ -1,36 +1,45 @@
 <h1>Book Appointment for <%= @service.title %> </h1>
 
 <div class="mx-auto text-center">
-  <%= link_to 'Back', @service, class: "btn btn-secondary" %>
+  <% if params[:reschedule] == nil %>
+    <%= link_to 'Back', @service, class: "btn btn-secondary" %>
+  <% else %>
+    <%= link_to 'Cancel', request.referer, class: "btn btn-secondary" %>
+  <% end %>
 </div>
 
 <br> 
 
 <div class="appointments-feed">
+  <% if params[:reschedule] != nil %>
+    <ul class="list-group">
+      <li class="list-group-item border-0">
+        <button type="button" class="btn btn-primary btn-lg btn-block" disabled>
+          <% curr = Appointment.find(params[:reschedule])%>
+          <div class="appointments-feed-date mt-2">
+            <span><b> Current Appointment </b></span>            
+          </div>
+          <%= render 'book_entry', appointment: curr%>
+        </button>
+      </li>
+    </ul>
+  <% end %>
   <% if @appointments.empty? %>
     <p> There are no appointments available for this service at the moment. </p>
   <% end %>
   <ul class="list-group">
     <% @appointments.each do |appointment| %>
       <li class="list-group-item border-0">
-        <%= link_to service_appointment_path(appointment.service.id, appointment, :do_action => :book), 
+        <%= link_to service_appointment_path(appointment.service.id, appointment, :do_action => :book, :reschedule => params[:reschedule]), 
           method: :patch, class: "btn btn-outline-primary btn-lg btn-block", data: {confirm: 'Book appointment?'} do %>
-          <div class="appointments-feed-item">
-            <% meridian = (appointment.start_time.hour < 12 && appointment.end_time.hour >=12) %>
-            <% date_str = appointment.date.strftime("%A, %B %-d, %Y") %>
-            <% start_time = meridian ? appointment.start_time.strftime("%l:%M %P") : appointment.start_time.strftime("%l:%M") %>
-            <% end_time = appointment.end_time.strftime("%l:%M %P") %>
-            <div class="appointments-feed-date">
-              <span><%= "#{date_str}" %></span>            
-            </div>
-            <div class="appointments-feed-date">
-              <span><%= "#{start_time} - #{end_time}" %></span>            
-            </div>
-          </div>
+          <%= render 'book_entry', appointment: appointment%>
         <% end %>
       </li>
     <% end %>
   </ul>
+  <div class="service-feed-nav">
+    <%== pagy_bootstrap_nav(@pagy_appointments) %>  
+  </div>
 </div>
 
 <br>

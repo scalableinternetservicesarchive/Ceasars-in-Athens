@@ -13,7 +13,7 @@
   <% end %>
   <div class="form-group">
     <%= form.label :date, class: "control-label" %>
-    <% today = DateTime.now.strftime("%Y-%m-%d") %>
+    <% today = Time.now.getlocal('-08:00').strftime("%Y-%m-%d") %>
     <%= date_field(:appointment_builder, :date, value: appointment_builder.date || today, min: today, class: "form-control") %>
   </div>
 

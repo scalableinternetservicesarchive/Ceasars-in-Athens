@@ -4,6 +4,8 @@
   <% else %>
     <%= render 'book' %>
   <% end %>
+<% elsif params[:view] == 'provider'%>
+  <%= render 'manage' %>
 <% else %>
   <%= render 'list' %>
 <% end %>
