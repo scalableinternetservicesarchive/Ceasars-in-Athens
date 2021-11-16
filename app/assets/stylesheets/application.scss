@@ -28,6 +28,10 @@ a:visited.btn-danger {
   color: white !important;
 }
 
+a:link { 
+  text-decoration:none; 
+}
+
 #error_explanation {
   @extend .alert;
   @extend .alert-danger;
