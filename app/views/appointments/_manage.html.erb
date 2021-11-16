@@ -1,7 +1,7 @@
 <h1>Manage Appointments</h1>
 
 <div class="mx-auto text-center">
-  <% if params[:service_id] != nil %>
+  <% if !params[:service_id].nil? %>
     <%= link_to 'Back', @service, class: "btn btn-secondary" %>
     <%= link_to 'Generate Appointments', new_service_appointment_path(@service), class: "btn btn-primary" %>
   <% else %>
@@ -23,33 +23,13 @@
         <ul class="list-group">
           <% @booked.each do |appointment| %>
             <li class="list-group-item">
-              <div class="appointment">
-                <div class="appointment-title">
-                  <span><%= appointment.service.title %></span>            
-                </div>
-                <div class="appointment-author">
-                  <span>With: <%= User.find(appointment.user_id).username %> </span>            
-                </div>
-                <div class="appointment-date">
-                  <% start_time = appointment.start_time.getlocal('-08:00') %>
-                  <% end_time = appointment.end_time.getlocal('-08:00') %>
-                  <% meridian = (start_time.hour < 12 && end_time.hour >=12) %>
-                  <% date_str = start_time.strftime("%A, %B %-d, %Y") %>
-                  <% start_time_str = meridian ? start_time.strftime("%l:%M %P") : start_time.strftime("%l:%M") %>
-                  <% end_time_str = end_time.strftime("%l:%M %P") %>
-                  <span><%= "#{date_str} • #{start_time_str} - #{end_time_str}" %></span>            
-                </div>
-                <div class="appointment-buttons">
-                  <%= link_to 'Decline', 
-                    service_appointment_url(appointment.service.id, appointment, :do_action => :decline),
-                    method: :patch, class: "btn btn-secondary btn-sm btn-block",
-                    data: {confirm: 'Are you sure you want to decline this appointment? This appointment slot will become available.'} %>
-                  <%= link_to 'Delete', 
-                    service_appointment_url(appointment.service.id, appointment), 
-                    method: :delete, class: "btn btn-danger btn-sm btn-block",
-                    data: {confirm: 'Are you sure you want to cancel this appointment? This slot is already booked and will be removed.'} %>
-                </div>
-              </div>
+              <% if params[:service_id].nil? %>
+                <%= link_to appointment.service do %>
+                  <%= render 'manage_booked', appointment: appointment %>
+                <% end %>
+              <% else %>
+                <%= render 'manage_booked', appointment: appointment %>
+              <% end %>
             </li>
           <% end %>
         </ul>
@@ -68,26 +48,13 @@
         <ul class="list-group">
           <% @appointments.each do |appointment| %>
             <li class="list-group-item">
-              <div class="appointment">
-                <div class="appointment-title">
-                  <span><%= appointment.service.title %></span>            
-                </div>
-                <div class="appointment-date">
-                  <% start_time = appointment.start_time.getlocal('-08:00') %>
-                  <% end_time = appointment.end_time.getlocal('-08:00') %>
-                  <% meridian = (start_time.hour < 12 && end_time.hour >=12) %>
-                  <% date_str = start_time.strftime("%A, %B %-d, %Y") %>
-                  <% start_time_str = meridian ? start_time.strftime("%l:%M %P") : start_time.strftime("%l:%M") %>
-                  <% end_time_str = end_time.strftime("%l:%M %P") %>
-                  <span><%= "#{date_str} • #{start_time_str} - #{end_time_str}" %></span>            
-                </div>
-                <div class="appointment-buttons">
-                  <%= link_to 'Delete', 
-                    service_appointment_url(appointment.service.id, appointment),
-                    method: :delete, class: "btn btn-secondary btn-sm mt-3 btn-block",
-                    data: {confirm: 'Are you sure you want to delete this appointment slot?'} %>
-                  </div>
-              </div>
+              <% if params[:service_id].nil? %>
+                <%= link_to appointment.service do %>
+                  <%= render 'manage_avail', appointment: appointment %>
+                <% end %>
+              <% else %>
+                <%= render 'manage_avail', appointment: appointment %>
+              <% end %>
             </li>
           <% end %>
         </ul>
