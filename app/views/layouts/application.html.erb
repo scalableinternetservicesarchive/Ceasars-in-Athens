@@ -23,12 +23,9 @@
           <%= current_user.username %>
           </h5>
         <% end %>
-        <% if current_user  %>
-          <a class="navbar-text nav-item mr-3 text-white" href="/appointments"> My Appointments </a>
-        <% end %>
-        
         <a class="navbar-text nav-item mr-3 text-white" href="/services?owned=true"> My Services </a>
         <% if current_user  %>
+          <a class="navbar-text nav-item mr-3 text-white" href="/appointments"> My Appointments </a>
           <%= link_to 'Logout', logout_path, method: :delete, class: "navbar-text nav-item mr-3 text-white" %>
         <% else %>
           <%= link_to 'Login', login_path, class: "navbar-text nav-item mr-3 text-white" %>
