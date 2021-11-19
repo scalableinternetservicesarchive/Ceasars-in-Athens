@@ -46,6 +46,10 @@
           <var name="service_suffix" />
         </setdynvars>
 
+        <setdynvars sourcetype="random_string" length="15">
+          <var name="service_suffix" />
+        </setdynvars>        
+
         <!-- send to root directory and see the service list -->
         <request> <http url='/' version='1.1' method='GET'></http> </request>
         <request> <http url='/login' version='1.1' method='GET'></http> </request>
@@ -77,7 +81,7 @@
             url="/services/new" 
             method="POST" 
             version="1.1" 
-            contents="service[title]=%%_username%%days&amp;
+            contents="service[title]=Dog Grooming by %%_username%%days&amp;
                       service[description]Dog Grooming %%_service_suffix%%&amp;
                       commit=Create+Service"
             content_type="application/x-www-form-urlencoded" />
