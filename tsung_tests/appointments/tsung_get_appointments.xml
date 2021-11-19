@@ -1,0 +1,287 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" [] >
+<tsung loglevel="notice">
+  <clients>
+    <client host="localhost" maxusers="32768" use_controller_vm="true" />
+  </clients>
+
+  <servers>
+    <server host="kokinarimoto.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+  </servers>
+
+  <load>
+    <arrivalphase phase="1" duration="5" unit="second">
+      <users arrivalrate="1" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="5" unit="second">
+      <users arrivalrate="2" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="5" unit="second">
+      <users arrivalrate="4" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="5" unit="second">
+      <users arrivalrate="8" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="5" duration="5" unit="second">
+      <users arrivalrate="16" unit="second"></users>
+    </arrivalphase>
+    <!-- <arrivalphase phase="6" duration="5" unit="second">
+      <users arrivalrate="32" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="7" duration="5" unit="second">
+      <users arrivalrate="64" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="8" duration="5" unit="second">
+      <users arrivalrate="128" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="9" duration="5" unit="second">
+      <users arrivalrate="256" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="10" duration="5" unit="second">
+      <users arrivalrate="512" unit="second"></users>
+    </arrivalphase> -->
+  </load>
+
+  <options>
+    <!-- Set connection timeout to 2 seconds -->
+    <option name="global_ack_timeout" value="2000"></option>
+    <!-- available client ports to run concurrent connections -->
+    <option name="ports_range" min="1025" max="65535"/>
+  </options>
+
+<!-- -->
+<sessions>
+    <session name="client-booking" probability="100" type="ts_http">
+        <transaction name="booking">
+            <!-- start out at the root but send to login -->
+            <request> <http url='/' version='1.1' method='GET'></http> </request>
+            <request> <http url='/login' version='1.1' method='GET'></http> </request>
+            <request> <http url='/register' version='1.1' method='GET'></http> </request>
+            
+            <!-- create a random user_id -->
+            <setdynvars sourcetype="random_number" start="1" end="99999">
+                <var name="random_user" />
+            </setdynvars>
+            <setdynvars sourcetype="random_string" length="15">
+                <var name="user_password" />
+            </setdynvars>
+
+            <!-- wait for up to 2 seconds, user is thinking about register info -->
+            <thinktime value="2" random="true"></thinktime>
+            <!-- register -->
+            <request subst="true">
+            <http 
+                url="/register" 
+                method="POST" 
+                version="1.1" 
+                contents="user[username]=cia%%_random_user%%&amp;
+                        user[password]=%%_user_password%%&amp;
+                        user[password_confirmation]=%%_user_password%%&amp;
+                        commit=Register" 
+                    content_type="application/x-www-form-urlencoded" />
+            </request>
+
+            <!-- send to root directory and see the service list -->
+            <request> <http url='/' version='1.1' method='GET'></http> </request>
+            <request> <http url='/login' version='1.1' method='GET'></http> </request>
+
+            <thinktime value="2" random="true"></thinktime>
+            <request subst="true">
+                <http 
+                    url="/login" 
+                    method="POST" 
+                    version="1.1" 
+                    contents="user[username]=cia%%_random_user%%&amp;
+                        user[password]=%%_user_password%%&amp;
+                        commit=Log in" 
+                    content_type="application/x-www-form-urlencoded" />
+            </request>
+
+            <!-- send to root directory and see the service list -->
+            <request> <http url='/' method='GET' version='1.1'> </http> </request>
+
+            <!-- click create a service -->
+            <request> <http url="/services/new" method="GET" version="1.1" /> </request>
+
+            <!-- Wait while user fills out 'new services' form -->
+            <thinktime value="3" random="true"></thinktime>
+            <request subst="true">
+                <dyn_variable name="services_redirect" re="[Ll]ocation: (.*)\r" />
+                <http 
+                    url="/services/new" 
+                    method="POST" 
+                    version="1.1" 
+                    contents="service[title]=%%_random_user%%days&amp;
+                            service[description]=clean your bathroom&amp;
+                            commit=Create+Service"
+                    content_type="application/x-www-form-urlencoded" />
+            </request>
+
+            <!-- follow redirect -->
+            <request subst="true">
+                <http url="%%_services_redirect%%" method="GET" version="1.1" />
+            </request>
+
+            <!-- click on manage appointments to create appointment slots -->
+            <request subst="true">
+                <http url="%%_services_redirect%%/appointments" method="GET" version="1.1" />
+            </request>
+
+            <!-- click on generate appointments to create appointment slots -->
+            <request subst="true">
+                <http url="%%_services_redirect%%/appointments/new" method="GET" version="1.1" />
+            </request>
+
+            <!-- ASK QUESTIONS ABOUT THIS -->
+            <request subst="true">
+                <http 
+                    url="%%_services_redirect%%/appointments/new" 
+                    method="POST" version="1.1" 
+                    contents="appointment[date]=cia%%_random_user%%&amp;
+                        appointment[start_time]=%%_user_password%%&amp;
+                        appointment[start_time]=%%_user_password%%&amp;
+                        appointment[start_time]=%%_user_password%%&amp;
+                        commit=Log in" 
+                    content_type="application/x-www-form-urlencoded" />
+            </request> 
+            <!-- ASK QUESTIONS ABOUT THIS -->
+                  
+            <!-- click on manage appointments to create appointment slots -->
+            <request subst="true">
+                <http url="%%_services_redirect%%/appointments" method="GET" version="1.1" />
+            </request>
+
+            <!-- Log out -->
+            <request subst="true">
+            <http 
+                url="/logout" 
+                method="POST" 
+                version="1.1" 
+                contents="_method=delete" 
+                content_type="application/x-www-form-urlencoded" />
+            </request>
+
+            <!-- Second User Login -->
+            <request> <http url='/' version='1.1' method='GET'></http> </request>
+            <request> <http url='/login' version='1.1' method='GET'></http> </request>
+            <request> <http url='/register' version='1.1' method='GET'></http> </request>
+            
+            <!-- create a random user_id -->
+            <setdynvars sourcetype="random_number" start="1" end="99999">
+                <var name="random_user_2" />
+            </setdynvars>
+            <setdynvars sourcetype="random_string" length="15">
+                <var name="user_password_2" />
+            </setdynvars>
+
+            <!-- wait for up to 2 seconds, user is thinking about register info -->
+            <thinktime value="2" random="true"></thinktime>
+            <!-- register -->
+            <request subst="true">
+            <http 
+                url="/register" 
+                method="POST" 
+                version="1.1" 
+                contents="user[username]=cia%%_random_user_2%%&amp;
+                        user[password]=%%_user_password_2%%&amp;
+                        user[password_confirmation]=%%_user_password_2%%&amp;
+                        commit=Register" 
+                    content_type="application/x-www-form-urlencoded" />
+            </request>
+
+            <!-- send to root directory and see the service list -->
+            <request> <http url='/' version='1.1' method='GET'></http> </request>
+            <request> <http url='/login' version='1.1' method='GET'></http> </request>
+
+            <thinktime value="2" random="true"></thinktime>
+            <request subst="true">
+            <http 
+                url="/login" 
+                method="POST" 
+                version="1.1" 
+                contents="user[username]=cia%%_random_user_2%%&amp;
+                    user[password]=%%_user_password_2%%&amp;
+                    commit=Log in" 
+                content_type="application/x-www-form-urlencoded" />
+            </request>
+
+            <!-- send to root directory and see the service list -->
+            <request> <http url='/' method='GET' version='1.1'> </http> </request>
+            
+            <!-- send to the service user 1 created -->
+            <request subst="true">
+                <http url="%%_services_redirect%%" method="GET" version="1.1" />
+            </request>
+
+             <!-- book the service user 1 created -->
+            <request subst="true">
+                <http url="%%_services_redirect%%/appointments" method="GET" version="1.1" />
+            </request>
+
+            <!-- delete a booking -->
+            <request subst="true">
+            <http 
+                url="/my-bookings-edit" 
+                method="DELETE" 
+                version="1.1"  />
+            </request>
+
+            <!-- signout -->
+            <request>
+            <http url="/logout" version="1.1" method="DELETE"/>
+            </request>
+
+            </transaction>
+            <transaction name="delete-booking">
+
+            <!-- start out at the root but send to login -->
+            <request> <http url='/' version='1.1' method='GET'></http> </request>
+            <request> <http url='/login' version='1.1' method='GET'></http> </request>
+            
+            <!-- wait for up to 5 seconds, user is thinking about login info -->
+            <thinktime value="2" random="true"></thinktime>
+
+            <!-- login -->
+            <request subst="true">
+            <http 
+                url="/login" 
+                method="POST" 
+                version="1.1" 
+                contents="session[email]=User%%random_user%%@ucsb.com&amp;
+                        session[password]=%%user_password%%&amp;commit=Login" 
+                content_type="application/x-www-form-urlencoded"  />
+            </request>
+
+            <!-- send to root directory and see the service list -->
+            <request>
+            <http url='/'
+            method='GET'
+            version='1.1'>
+            </http>
+            </request>
+
+            <!-- send to my bookings page -->
+            <request>
+            <http url='/my-bookings'
+            method='GET'
+            version='1.1'>
+            </http>
+            </request>
+
+            <!-- delete a booking -->
+            <request subst="true">
+            <http 
+                url="/my-bookings-edit" 
+                method="DELETE" 
+                version="1.1"  />
+            </request>
+
+            <!-- signout -->
+            <request>
+            <http url="/logout" version="1.1" method="DELETE"/>
+            </request>
+
+        </transaction>
+    </session>
+  </sessions>
+</tsung>

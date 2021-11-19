@@ -34,7 +34,7 @@
 
   <sessions>
     <session name="main" type="ts_http" weight="1">
-      <transaction name="register">
+      <transaction name="create-edit-service">
 
         <!-- create a random user_id -->
         <setdynvars sourcetype="random_number" start="1" end="99999">
@@ -51,7 +51,6 @@
         
         <!-- wait for up to 2 seconds, user is thinking about login info -->
         <thinktime value="2" random="true"></thinktime>
-
         <request subst="true">
           <http 
             url="/register" 
@@ -83,27 +82,10 @@
         <request> <http url='/' version='1.1' method='GET'></http> </request>
         
         <!-- click create a service -->
-        <request>
-          <http url="/services/new" method="GET" version="1.1" />
-        </request>
+        <request> <http url="/services/new" method="GET" version="1.1" /> </request>
 
         <!-- Wait while user fills out 'new services' form -->
         <thinktime value="3" random="true"></thinktime>
-
-        <!-- submit 'new services' form -->
-        <!-- <request subst="true">
-          <dyn_variable name="services_redirect" re="[Ll]ocation: (.*)\r"/>
-          <http 
-            url="/services/new" 
-            method="POST" 
-            version="1.1" 
-            contents="service[availability]=%%_random_user%%days&amp;
-                      service[description]=clean your bathroom&amp;
-                      service[title]=Cleaning Service&amp;
-                      service[address]=SB&amp;
-                      commit=Add+Service"
-            content_type="application/x-www-form-urlencoded" />
-        </request> -->
         <request subst="true">
           <dyn_variable name="services_redirect" re="[Ll]ocation: (.*)\r" />
           <http 
@@ -117,10 +99,21 @@
         </request>
 
         <!-- follow redirect -->
+        <request subst="true"> <http url="%%_services_redirect%%" method="GET" version="1.1" /> </request>
+        <request subst="true"> <http url="%%_services_redirect%%/edit" method="GET" version="1.1" /> </request>
+        
+        <thinktime value="3" random="true"></thinktime>
         <request subst="true">
-          <http url="%%_services_redirect%%" method="GET" version="1.1" />
+          <http 
+            url="%%_services_redirect%%/edit" 
+            method="POST" 
+            version="1.1" 
+            contents="service[title]=cia%%_random_user%%&amp;
+                      service[description]=dirty your bathroom&amp;
+                      commit=Create+Service"
+            content_type="application/x-www-form-urlencoded" />
         </request>
-
+        <request subst="true"> <http url="%%_services_redirect%%" method="GET" version="1.1" /> </request>
         <request> <http url='/' version='1.1' method='GET'></http> </request>
         
         <!-- Log out -->

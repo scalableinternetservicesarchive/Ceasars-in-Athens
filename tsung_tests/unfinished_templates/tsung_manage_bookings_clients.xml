@@ -106,6 +106,56 @@
         </request>
 
         </transaction>
+        <transaction name="delete-booking">
+
+        <!-- start out at the root but send to login -->
+        <request> <http url='/' version='1.1' method='GET'></http> </request>
+        <request> <http url='/login' version='1.1' method='GET'></http> </request>
+        
+        <!-- wait for up to 5 seconds, user is thinking about login info -->
+        <thinktime value="2" random="true"></thinktime>
+
+        <!-- login -->
+        <request subst="true">
+          <http 
+            url="/login" 
+            method="POST" 
+            version="1.1" 
+            contents="session[email]=User%%random_user%%@ucsb.com&amp;
+                      session[password]=%%user_password%%&amp;commit=Login" 
+            content_type="application/x-www-form-urlencoded"  />
+        </request>
+
+        <!-- send to root directory and see the service list -->
+        <request>
+          <http url='/'
+          method='GET'
+          version='1.1'>
+          </http>
+        </request>
+
+        <!-- send to my bookings page -->
+        <request>
+          <http url='/my-bookings'
+          method='GET'
+          version='1.1'>
+          </http>
+        </request>
+
+        <!-- delete a booking -->
+        <request subst="true">
+          <http 
+            url="/my-bookings-edit" 
+            method="DELETE" 
+            version="1.1"  />
+        </request>
+
+        <!-- signout -->
+        <request>
+          <http url="/logout" version="1.1" method="DELETE"/>
+        </request>
+
+        </transaction>
     </session>
   </sessions>
 </tsung>
