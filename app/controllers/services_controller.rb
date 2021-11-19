@@ -1,4 +1,5 @@
 class ServicesController < ApplicationController
+  caches_page :show, :new
   include Pagy::Backend
 
   before_action :set_service, only: [:show, :edit, :update, :destroy]
@@ -27,7 +28,7 @@ class ServicesController < ApplicationController
 
   # GET /services/new
   def new
-    @service = Service.new
+    @service = Service.new if stale?(Service.all)
   end
 
   # GET /services/1/edit

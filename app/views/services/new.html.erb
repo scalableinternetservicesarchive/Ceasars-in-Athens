@@ -1,3 +1,5 @@
+<% cache_if true do %>
+    <p>hi</p>
 <h1>New Service</h1>
 
 <div class="mx-auto text-center">
@@ -7,3 +9,5 @@
 <div class='container'>
     <%= render 'form', service: @service %>
 </div>
+
+<% end %>

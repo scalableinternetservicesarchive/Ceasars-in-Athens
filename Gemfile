@@ -22,6 +22,8 @@ gem 'jquery-rails'
 
 gem 'pagy', '~> 5.2'
 
+gem 'actionpack-page_caching'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
