@@ -6,7 +6,7 @@
   </clients>
 
   <servers>
-    <server host="kokinarimoto.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+    <server host="localhost" port="3000" type="tcp"></server>
   </servers>
 
   <load>
@@ -30,39 +30,25 @@
   <options>
     <!-- Set connection timeout to 2 seconds -->
     <option name="global_ack_timeout" value="2000"></option>
+    <option name="file_server" id="users" value="users.csv"/>
   </options>
 
   <sessions>
     <session name="main" type="ts_http" weight="1">
       <transaction name="create-service">
 
-        <!-- create a random user_id -->
-        <setdynvars sourcetype="random_number" start="1" end="99999">
-          <var name="random_user" />
+        <setdynvars sourcetype="file" fileid="users" delimiter="," order="iter">
+          <var name="username" />
+          <var name="password" />
         </setdynvars>
+
         <setdynvars sourcetype="random_string" length="15">
-          <var name="user_password" />
+          <var name="service_suffix" />
         </setdynvars>
 
-        <!-- start out at the root but send to login -->
-        <request> <http url='/' version='1.1' method='GET'></http> </request>
-        <request> <http url='/login' version='1.1' method='GET'></http> </request>
-        <request> <http url='/register' version='1.1' method='GET'></http> </request>
-        
-        <!-- wait for up to 2 seconds, user is thinking about login info -->
-        <thinktime value="2" random="true"></thinktime>
-
-        <request subst="true">
-          <http 
-            url="/register" 
-            method="POST" 
-            version="1.1" 
-            contents="user[username]=cia%%_random_user%%&amp;
-                user[password]=%%_user_password%%&amp;
-                user[password_confirmation]=%%_user_password%%&amp;
-                commit=Register" 
-            content_type="application/x-www-form-urlencoded" />
-        </request>
+        <setdynvars sourcetype="random_string" length="15">
+          <var name="service_suffix" />
+        </setdynvars>        
 
         <!-- send to root directory and see the service list -->
         <request> <http url='/' version='1.1' method='GET'></http> </request>
@@ -74,8 +60,8 @@
             url="/login" 
             method="POST" 
             version="1.1" 
-            contents="user[username]=cia%%_random_user%%&amp;
-                user[password]=%%_user_password%%&amp;
+            contents="user[username]=%%_username%%&amp;
+                user[password]=%%_password%%&amp;
                 commit=Log in" 
             content_type="application/x-www-form-urlencoded" />
         </request>
@@ -95,8 +81,8 @@
             url="/services/new" 
             method="POST" 
             version="1.1" 
-            contents="service[title]=%%_random_user%%days&amp;
-                      service[description]=clean your bathroom&amp;
+            contents="service[title]=Dog Grooming by %%_username%%days&amp;
+                      service[description]Dog Grooming %%_service_suffix%%&amp;
                       commit=Create+Service"
             content_type="application/x-www-form-urlencoded" />
         </request>

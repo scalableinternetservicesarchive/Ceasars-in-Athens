@@ -6,7 +6,7 @@
   </clients>
 
   <servers>
-    <server host="kerem.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+    <server host="localhost" port="3000" type="tcp"></server>
   </servers>
 
   <load>
@@ -35,11 +35,6 @@
   <sessions>
     <session name="main" type="ts_http" weight="1">
       <transaction name="register">
-
-        <!-- <setdynvars sourcetype="file" fileid="users" delimiter="," order="iter">
-          <var name="random_user" />
-          <var name="user_password" />
-        </setdynvars> -->
 
         <!-- create a random user_id -->
         <setdynvars sourcetype="random_number" start="1" end="99999">

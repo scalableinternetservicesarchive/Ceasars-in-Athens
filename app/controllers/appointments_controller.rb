@@ -39,7 +39,7 @@ class AppointmentsController < ApplicationController
           .where('services.user_id = ?', session[:user_id])
           .where('start_time >= ?', now)
           .order("appointments.date", "appointments.start_time"),
-        page_param: :page_booked
+        page_param: :page_appts
       )
       # Appointments to services belonging to the current user
       @pagy_booked, @booked = pagy(
