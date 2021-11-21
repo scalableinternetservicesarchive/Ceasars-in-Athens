@@ -2,7 +2,7 @@
 <!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" [] >
 <tsung loglevel="notice">
   <clients>
-    <client host="localhost" maxusers="32768" use_controller_vm="true" />
+    <client host="localhost" maxusers="130000" use_controller_vm="true" />
   </clients>
 
   <servers>
@@ -11,19 +11,19 @@
 
   <load>
     <arrivalphase phase="1" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="1000" unit="second"></users>
+      <users arrivalrate="100" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="2" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="4000" unit="second"></users>
+      <users arrivalrate="400" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="3" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="16000" unit="second"></users>
+      <users arrivalrate="1600" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="4" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="64000" unit="second"></users>
+      <users arrivalrate="6400" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="5" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="256000" unit="second"></users>
+      <users arrivalrate="25600" unit="second"></users>
     </arrivalphase>
   </load>
 
@@ -34,17 +34,17 @@
 
   <sessions>
     <session name="main" type="ts_http" weight="1">
-      <transaction name="unauthenticated-service-browse">
+      <transaction name="browse">
         <request> <http url='/' version='1.1' method='GET'></http> </request>
 
-        <repeat name="browse_random_pages" max_repeat="50">
+        <for from="1" to="50" incr="1" var="counter">
           <setdynvars sourcetype="random_number" start="1" end="9999">
             <var name="next_page" />
           </setdynvars>
 
           <thinktime value="2" random="true"></thinktime>
           <request> <http url='?page=%%_next_page%%' version='1.1' method='GET'></http> </request>
-        </repeat>
+        </for>
 
       </transaction>
     </session>
