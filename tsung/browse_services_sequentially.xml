@@ -6,24 +6,24 @@
   </clients>
 
   <servers>
-    <server host="kerem.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+    <server host="localhost" port="3000" type="tcp"></server>
   </servers>
 
   <load>
     <arrivalphase phase="1" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="100" unit="second"></users>
+      <users arrivalrate="10" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="2" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="400" unit="second"></users>
+      <users arrivalrate="20" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="3" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="1600" unit="second"></users>
+      <users arrivalrate="40" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="4" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="6400" unit="second"></users>
+      <users arrivalrate="160" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="5" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="25600" unit="second"></users>
+      <users arrivalrate="640" unit="second"></users>
     </arrivalphase>
   </load>
 
@@ -37,13 +37,9 @@
       <transaction name="browse">
         <request> <http url='/' version='1.1' method='GET'></http> </request>
 
-        <for from="1" to="50" incr="1" var="counter">
-          <setdynvars sourcetype="random_number" start="1" end="9999">
-            <var name="next_page" />
-          </setdynvars>
-
+        <for from="1" to="20" incr="1" var="counter">
           <thinktime value="2" random="true"></thinktime>
-          <request subst="true"> <http url='/?page=%%_next_page%%' version='1.1' method='GET'></http> </request>
+          <request subst="true"> <http url='/?page=%%_counter%%' version='1.1' method='GET'></http> </request>
         </for>
 
       </transaction>
