@@ -8,30 +8,33 @@ end
 
 conn = ActiveRecord::Base.connection()
 
-read_csv("users.csv").each do |row|
-  user = User.new
-  user.id = row['id'].to_i
-  user.username = row['username']
-  user.password = row['password']
-  if !user.save
-    puts user.errors.full_messages
-  end
-end
+NUM_USERS = 100
+NUM_SERVICES = 100000
 
 APPTS_NEXT_N_DAYS = 3
 APPTS_START_HOUR = 7
 APPTS_END_HOUR = 20
 APPT_DURATION_MINS = 60
 
-read_csv("services.csv").each do |row|
-  service = Service.new
-  service.id = row['id'].to_i
-  service.title = row['title']
-  service.description = row['description']
-  service.user_id = row['user_id'].to_i
-  if !service.save
-    puts service.errors.full_messages
+(1..NUM_USERS).each do |i|
+  user = User.new
+  user.username = "test_user_#{i}"
+  user.password = "password"
+  if !user.save
+    puts user.errors.full_messages
   end
+end
+
+services = []
+appointments = []
+
+(1..NUM_SERVICES).each do |i|
+  service = [
+    "My Test Service #{i}",
+    "This is a sample test service #{i}",
+    (i % NUM_USERS) + 1
+  ]
+  services << service
   (1..APPTS_NEXT_N_DAYS).each do |day_offset|
     date = Time.now + day_offset.days
 
@@ -40,25 +43,46 @@ read_csv("services.csv").each do |row|
 
     curr_time = start_time
     while curr_time <= end_time - APPT_DURATION_MINS.minutes
-      appt = Appointment.new(
-        date: curr_time,
-        start_time: curr_time,
-        end_time: curr_time + APPT_DURATION_MINS.minutes,
-        service_id: service.id
-      )
-      if !appt.save
-        puts appt.errors.full_messages
-      end
+      appt = [
+        date,
+        curr_time,
+        curr_time + APPT_DURATION_MINS.minutes,
+        i
+      ]
+      appointments << appt
       curr_time += APPT_DURATION_MINS.minutes
-    end 
+    end
   end
 end
 
-sql = <<-EOL
-  SELECT setval(pg_get_serial_sequence('users', 'id'), max(id) + 1, false) FROM users;
-  SELECT setval(pg_get_serial_sequence('services', 'id'), max(id) + 1, false) FROM services;
-EOL
+saved_svcs = 0
+saved_appts = 0
 
-sql.split(';').each do |s|
-  conn.execute(s.strip) unless s.strip.empty?
+services.in_groups_of(1000, fill_with = false) do |group|
+  vals = group.map { |svc| 
+    now = Time.now
+    title = svc[0]
+    description = svc[1]
+    user_id = svc[2]
+    "('#{title}', '#{description}', '#{user_id}', '#{now}', '#{now}')"
+  }.join(", ")
+  saved_svcs += group.length()
+  puts "Saved #{saved_svcs}/#{services.length} services"
+  sql = "INSERT INTO services (title, description, user_id, created_at, updated_at) VALUES #{vals}"
+  conn.execute(sql)
+end
+
+appointments.in_groups_of(10000, fill_with = false) do |group|
+  vals = group.map { |appt| 
+    now = Time.now
+    date = appt[0]
+    start_time = appt[1]
+    end_time = appt[2]
+    service_id = appt[3]
+    "('#{date}', '#{start_time}', '#{end_time}', '#{service_id}', '#{now}', '#{now}')"
+  }.join(", ")
+  saved_appts += group.length()
+  puts "Saved #{saved_appts}/#{appointments.length} appointments"
+  sql = "INSERT INTO appointments (date, start_time, end_time, service_id, created_at, updated_at) VALUES #{vals}"
+  conn.execute(sql)
 end
