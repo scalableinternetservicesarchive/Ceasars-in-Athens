@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" [] >
+<tsung loglevel="notice">
+  <clients>
+    <client host="localhost" maxusers="32768" use_controller_vm="true" />
+  </clients>
+
+  <servers>
+    <server host="kokinarimoto.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+  </servers>
+
+  <load>
+    <arrivalphase phase="1" duration="20" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="1" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="20" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="2" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="20" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="4" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="20" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="8" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="5" duration="20" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="16" unit="second"></users>
+    </arrivalphase>
+  </load>
+
+  <options>
+    <!-- Set connection timeout to 2 seconds -->
+    <option name="global_ack_timeout" value="2000"></option>
+    <!-- available client ports to run concurrent connections -->
+    <!-- <option name="ports_range" min="1025" max="65535"/> -->
+
+    <!-- <option name="file_server" id="users" value="users.csv"/>
+    <option name="file_server" id="services" value="services.csv"/> -->
+  </options>
+
+<!--Scenario: Log in / See and Find a Service / Book a Service / Choose Availability / Logout-->
+<sessions>
+    <session name="services" probability="100" type="ts_http">
+      <transaction name="browse-service">
+
+        <!-- create a random user_id -->
+        <setdynvars sourcetype="random_number" start="1" end="99">
+          <var name="user_id" />
+        </setdynvars>
+
+        <!-- start out at the root but send to login ->register -->
+        <request> <http url='/' version='1.1' method='GET'></http> </request>
+        <request> <http url='/login' version='1.1' method='GET'></http> </request>
+        
+        <!-- wait for up to 2 seconds, user is thinking about login info -->
+        <thinktime value="2" random="true"></thinktime>
+        <request subst="true">
+          <http 
+            url="/login" 
+            method="POST" 
+            version="1.1" 
+            contents="session[username]=test_user_%%_user_id%%&amp;
+                user[password]=password&amp;
+                commit=Log in" 
+            content_type="application/x-www-form-urlencoded" />
+        </request>
+
+        <request> 
+          <!-- add regex for extracting the service id -->
+          <!-- <dyn_variable name="services_redirect" re="[Ll]ocation: (.*)\r" /> -->
+          <http url='/' version='1.1' method='GET'></http> 
+        </request>
+
+        <!-- want to browse pages sequentially -->
+        <for from="1" to="10" incr="1" var="counter">
+          <thinktime value="2" random="true"></thinktime>
+          <request subst="true"> 
+            <!-- add regex for extracting the service id -->
+            <!-- <dyn_variable name="services_redirect" re="[Ll]ocation: (.*)\r" /> -->
+            <http url='/?page=%%_counter%%' version='1.1' method='GET'></http> 
+          </request>
+
+          <!-- go to service -> appointments -->
+          <request subst = "true"> <http url='%%_services_redirect%%' version='1.1' method='GET'></http>  </request>
+          
+          <request subst = "true"> 
+            <!-- add regex for extracting the appointment id -->
+            <!-- <dyn_variable name="appointment_redirect" re="[Ll]ocation: (.*)\r" /> -->
+            <http url='%%_services_redirect%%/appointments' version='1.1' method='GET'></http>  
+          </request>
+
+          <request subst = "true"> <http url='%%_services_redirect%%' version='1.1' method='GET'></http>  </request>
+          <request subst = "true"> <http url='/services' version='1.1' method='GET'></http>  </request>
+        </for>
+        
+        <!-- Log out -->
+        <request>
+          <http 
+            url="/logout" 
+            method="POST" 
+            version="1.1" 
+            contents="_method=delete" 
+            content_type="application/x-www-form-urlencoded" />
+        </request>
+      </transaction>
+    </session>
+  </sessions>
+</tsung>

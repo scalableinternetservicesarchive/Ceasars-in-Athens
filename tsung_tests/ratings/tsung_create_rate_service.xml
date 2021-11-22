@@ -30,77 +30,56 @@
   <options>
     <!-- Set connection timeout to 2 seconds -->
     <option name="global_ack_timeout" value="2000"></option>
+    <option name="file_server" id="users" value="users.csv"/>
+    <option name="file_server" id="services" value="services.csv"/>
   </options>
 
   <sessions>
     <session name="main" type="ts_http" weight="1">
       <transaction name="create-rate-service">
-        <!-- create a random user_id and password -->
-        <setdynvars sourcetype="random_number" start="1" end="99999">
-          <var name="random_user" />
-        </setdynvars>
-        <setdynvars sourcetype="random_string" length="15">
-          <var name="user_password" />
+        <!-- get user login info -->
+        <setdynvars sourcetype="file" fileid="users" delimiter="," order="iter">
+          <var name="user_id" />
+          <var name="username" />
+          <var name="password" />
         </setdynvars>
 
         <!-- start out at the root but send to login ->register -->
         <request> <http url='/' version='1.1' method='GET'></http> </request>
         <request> <http url='/login' version='1.1' method='GET'></http> </request>
-        <request> <http url='/register' version='1.1' method='GET'></http> </request>
         
         <!-- wait for up to 2 seconds, user is thinking about login info -->
         <thinktime value="2" random="true"></thinktime>
-        <request subst="true">
-          <http 
-            url="/register" 
-            method="POST" 
-            version="1.1" 
-            contents="user[username]=cia%%_random_user%%&amp;
-                user[password]=%%_user_password%%&amp;
-                user[password_confirmation]=%%_user_password%%&amp;
-                commit=Register" 
-            content_type="application/x-www-form-urlencoded" />
-        </request>
-
-        <!-- send to root directory and see the service list -->
-        <request> <http url='/' version='1.1' method='GET'></http> </request>
-        <request> <http url='/login' version='1.1' method='GET'></http> </request>
-
-        <!-- wait for up to 2 seconds, user is thinking about login info -->
         <thinktime value="2" random="true"></thinktime>
         <request subst="true">
           <http 
             url="/login" 
             method="POST" 
             version="1.1" 
-            contents="user[username]=cia%%_random_user%%&amp;
-                user[password]=%%_user_password%%&amp;
+            contents="user[username]=cia%%_username%%&amp;
+                user[password]=%%_password%%&amp;
                 commit=Log+in" 
             content_type="application/x-www-form-urlencoded" />
         </request>
 
-        <!-- click create a service -->
         <request> <http url='/' version='1.1' method='GET'></http> </request>
-        <request> <http url="/services/new" method="GET" version="1.1" /> </request>
 
-        <!-- Wait while user fills out 'new services' form & submit 'new services' form -->
-        <thinktime value="3" random="true"></thinktime>
-        <request subst="true">
-          <dyn_variable name="services_redirect" re="[Ll]ocation: (.*)\r" />
-          <http 
-            url="/services/new" 
-            method="POST" 
-            version="1.1" 
-            contents="service[title]=%%_random_user%%_service&amp;
-                      service[description]=clean+your+bathroom&amp;
-                      commit=Create+Service"
-            content_type="application/x-www-form-urlencoded" />
-        </request>
+        <!-- get service info -->
+        <setdynvars sourcetype="file" fileid="users" delimiter="," order="iter">
+          <var name="service_id" />
+          <var name="title" />
+          <var name="description" />
+          <var name="user_id_for_service" />
+        </setdynvars>
 
         <!-- follow redirect -->
-        <request subst="true"> <http url="%%_services_redirect%%" method="GET" version="1.1" /> </request>
-        <request> <http url='/' version='1.1' method='GET'></http> </request>
+        <request subst="true"> <http url="/services%%_service_id%%" method="GET" version="1.1" /> </request>
         
+        <!-- want to see if logic can be placed into xml file to check for id -->
+
+        <!-- if id are different -->
+        <!-- want to book appointment -->
+
         <!-- Log out -->
         <request subst="true">
           <http 
