@@ -20,10 +20,10 @@
       <users arrivalrate="40" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="4" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="160" unit="second"></users>
+      <users arrivalrate="80" unit="second"></users>
     </arrivalphase>
     <arrivalphase phase="5" duration="200" unit="second" wait_all_sessions_end="true">
-      <users arrivalrate="640" unit="second"></users>
+      <users arrivalrate="160" unit="second"></users>
     </arrivalphase>
   </load>
 
@@ -37,7 +37,7 @@
       <transaction name="browse">
         <request> <http url='/' version='1.1' method='GET'></http> </request>
 
-        <for from="1" to="20" incr="1" var="counter">
+        <for from="1" to="15" incr="1" var="counter">
           <thinktime value="2" random="true"></thinktime>
           <request subst="true"> <http url='/?page=%%_counter%%' version='1.1' method='GET'></http> </request>
         </for>

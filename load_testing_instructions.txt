@@ -1,0 +1,26 @@
+1. SSH into cs291 EC2 instance
+2. Setup credentials properly
+3. `ENV_NAME=kerem`
+4. Run one of following depending on load testing conf:
+Baseline - single instance:
+    eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.8xlarge -db.user u -db.pass passwordpassword -i m5.8xlarge --single $ENV_NAME
+
+Vertically scaled - single instance:
+    eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.24xlarge -db.user u -db.pass passwordpassword -i m5.24xlarge --single $ENV_NAME
+
+Horizontally scaled - 5 instances:
+    eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.8xlarge -db.user u -db.pass passwordpassword -i m5.8xlarge --scale 10 $ENV_NAME
+
+Horizontally scaled - 10 instances:
+    eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.8xlarge -db.user u -db.pass passwordpassword -i m5.8xlarge --scale 10 $ENV_NAME
+
+5. When deployment is ready, SSH into an instance: `eb ssh $ENV_NAME`
+6. Run `cd /var/app/current && bin/rails db:seed` and wait for completion
+8. Disconnect from EB instance and back in EC2 jumpbox
+9. Run `launch_tsung.sh m5.24xlarge`
+10. SSH into new EC2 instance
+11. Follow ONLY the steps in "For OS setup" in https://gist.github.com/aviafelix/152d90df4f427f59fb59#for-os-setup
+12. Get your load test on that machine
+13. Ensure URL in load test is correct
+14. tsung -f <my-load-test.xml> -k start
+15. Visit the IP you SSHed into in your browser
