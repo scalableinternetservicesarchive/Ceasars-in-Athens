@@ -43,7 +43,7 @@
       <transaction name="browse-service">
 
         <!-- create a random user_id -->
-        <setdynvars sourcetype="random_number" start="1" end="99">
+        <setdynvars sourcetype="random_number" start="1" end="10">
           <var name="user_id" />
         </setdynvars>
 
@@ -58,8 +58,8 @@
             url="/login" 
             method="POST" 
             version="1.1" 
-            contents="session[username]=test_user_%%_user_id%%&amp;
-                user[password]=password&amp;
+            contents="login[username]=test_user_%%_user_id%%&amp;
+                login[password]=password&amp;
                 commit=Log in" 
             content_type="application/x-www-form-urlencoded" />
         </request>
@@ -75,20 +75,18 @@
           <thinktime value="2" random="true"></thinktime>
           <request subst="true"> 
             <!-- add regex for extracting the service id -->
-            <!-- <dyn_variable name="services_redirect" re="[Ll]ocation: (.*)\r" /> -->
+            <dyn_variable name="service_id" re=".*My Test Service (.*)&lt;.*"/>
             <http url='/?page=%%_counter%%' version='1.1' method='GET'></http> 
           </request>
 
           <!-- go to service -> appointments -->
-          <request subst = "true"> <http url='%%_services_redirect%%' version='1.1' method='GET'></http>  </request>
+          <request subst = "true"> <http url='/services/%%_service_id%%' version='1.1' method='GET'></http>  </request>
           
           <request subst = "true"> 
-            <!-- add regex for extracting the appointment id -->
-            <!-- <dyn_variable name="appointment_redirect" re="[Ll]ocation: (.*)\r" /> -->
-            <http url='%%_services_redirect%%/appointments' version='1.1' method='GET'></http>  
+            <http url='/services/%%_service_id%%/appointments' version='1.1' method='GET'></http>
           </request>
 
-          <request subst = "true"> <http url='%%_services_redirect%%' version='1.1' method='GET'></http>  </request>
+          <request subst = "true"> <http url='/services/%%_service_id%%' version='1.1' method='GET'></http>  </request>
           <request subst = "true"> <http url='/services' version='1.1' method='GET'></http>  </request>
         </for>
         

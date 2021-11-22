@@ -43,7 +43,7 @@
       <transaction name="booking-service">
 
         <!-- create a random user_id -->
-        <setdynvars sourcetype="random_number" start="1" end="99">
+        <setdynvars sourcetype="random_number" start="1" end="10">
           <var name="user_id" />
         </setdynvars>
 
@@ -58,15 +58,13 @@
             url="/login" 
             method="POST" 
             version="1.1" 
-            contents="session[username]=test_user_%%_user_id%%&amp;
-                user[password]=password&amp;
+            contents="login[username]=test_user_%%_user_id%%&amp;
+                login[password]=password&amp;
                 commit=Log in" 
             content_type="application/x-www-form-urlencoded" />
         </request>
 
         <request> 
-          <!-- add regex for extracting the service id -->
-          <!-- <dyn_variable name="services_redirect" re="[Ll]ocation: (.*)\r" /> -->
           <http url='/' version='1.1' method='GET'></http> 
         </request>
         
