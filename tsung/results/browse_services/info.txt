@@ -1,0 +1,29 @@
+in this test, user starts at root page for services, and navigates to the next page 20 times.
+
+Baseline:
+
+	We notice that successful responses are served at a constant rate, despite varying number of requests: 120 HTTP 200 per second.
+	Upon inspection of nginx logs on the EB instance, we see that there is some file descriptor issue with the Rails app UNIX socket:
+	```
+	2021/11/25 20:35:54 [error] 7650#7650: *13826 connect() to unix:///var/run/puma/my_app.sock failed (11: Resource temporarily unavailable) while connecting to upstream, client: 54.190.195.46, server: _, request: "GET /?page=1 HTTP/1.1", upstream: "http://unix:///var/run/puma/my_app.sock:/?page=1", host: "kerem2.eba-8zhfquyf.us-west-2.elasticbeanstalk.com"
+	```
+
+	We also notice that there is ~100% CPU usage in the RDS instance during the load tests:
+
+	<image high_rds_cpu_baseline.png>
+
+	This leads us to vertically scale both the DB and app servers:
+
+Vertically Scaled 1:
+
+	We notice the same constant rate of successful responses as our baseline configuration, indicating we are still at a bottleneck. We are capped at roughly 500 HTTP 200 per second, which is ~4 times that of the m5.2xlarge, and we have 4x more CPU cores, which leads us to believe that the bottleneck is on the app side, despite the RDS instance showing ~100% CPU usage during the latter stages of the load test:
+
+	<image high_rds_cpu_vertical-1.png>
+
+	We continue to scale up the resources on both the app and DB servers:
+
+Vertically Scaled 2:
+	
+	Again, we reach a constant rate of success at 1500 HTTP 200 per second which cements our theory that the default concurrency of an app is proportional to its number of CPU cores. We also notice that the RDS CPU usage is at 100% in the latter stages of the test again.
+
+	This leads us to stop scaling app servers up, and instead out. We can gain the same number of requests to the database at a cheaper cost. We still have not had any failures due to database overload. 
