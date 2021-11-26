@@ -1,0 +1,18 @@
+in this test, user starts at root page for services, and navigates to the next page 20 times.
+
+Baseline:
+
+	We notice that successful responses are served at a constant rate, despite varying number of requests: 120 HTTP 200 per second.
+	Upon inspection of nginx logs on the EB instance, we see that there is some file descriptor issue with the Rails app UNIX socket:
+	```
+	2021/11/25 20:35:54 [error] 7650#7650: *13826 connect() to unix:///var/run/puma/my_app.sock failed (11: Resource temporarily unavailable) while connecting to upstream, client: 54.190.195.46, server: _, request: "GET /?page=1 HTTP/1.1", upstream: "http://unix:///var/run/puma/my_app.sock:/?page=1", host: "kerem2.eba-8zhfquyf.us-west-2.elasticbeanstalk.com"
+	```
+
+	We also notice that there is ~100% CPU usage in the RDS instance during the load tests:
+
+	<image high_rds_cpu.png>
+
+	This leads us to vertically scale both the DB and app servers:
+
+Vertically Scaled 1:
+
