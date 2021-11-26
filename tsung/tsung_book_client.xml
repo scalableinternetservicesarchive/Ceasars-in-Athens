@@ -39,7 +39,7 @@
 
 <!--Scenario: Log in / See and Find a Service / Book a Service / Choose Availability / Logout-->
 <sessions>
-    <session name="client-booking" probability="100" type="ts_http">
+    <session name="booking" probability="100" type="ts_http">
       <transaction name="book_service">
 
         <!-- create a random user_id -->

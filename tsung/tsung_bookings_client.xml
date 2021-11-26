@@ -39,8 +39,8 @@
 
 <!--Scenario: Log in / See and Find a Service / Book a Service / Choose Availability / Logout-->
 <sessions>
-    <session name="client-booking" probability="100" type="ts_http">
-      <transaction name="booking-service">
+    <session name="manage" probability="100" type="ts_http">
+      <transaction name="client">
 
         <!-- create a random user_id -->
         <setdynvars sourcetype="random_number" start="1" end="10">

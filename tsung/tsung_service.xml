@@ -6,7 +6,7 @@
   </clients>
 
   <servers>
-    <server host="localhost" port="3000" type="tcp"></server>
+    <server host="koki.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
   </servers>
 
   <load>
@@ -30,21 +30,23 @@
   <options>
     <!-- Set connection timeout to 2 seconds -->
     <option name="global_ack_timeout" value="2000"></option>
-
-    <!-- <option name="file_server" id="users" value="users.csv"/> -->
   </options>
 
   <sessions>
     <session name="services" type="ts_http" weight="1">
-      <transaction name="create-service">
+      <transaction name="create_service">
         
         <!-- create a random user_id -->
         <setdynvars sourcetype="random_number" start="1" end="10">
           <var name="user_id" />
         </setdynvars>
 
-        <setdynvars sourcetype="random_string" length="15"> <var name="service_suffix" /> </setdynvars>
-        <setdynvars sourcetype="random_string" length="15"> <var name="service_suffix_2" /> </setdynvars>        
+        <setdynvars sourcetype="random_string" length="15"> 
+          <var name="service_suffix" /> 
+        </setdynvars>
+        <!-- <setdynvars sourcetype="random_string" length="15"> 
+          <var name="service_suffix_2" /> 
+        </setdynvars>         -->
 
         <request> <http url='/' version='1.1' method='GET'></http> </request>
         <request> <http url='/login' version='1.1' method='GET'></http> </request>
@@ -55,8 +57,8 @@
             url="/login" 
             method="POST" 
             version="1.1" 
-            contents="user[username]=test_user_%%_user_id%%&amp;
-                user[password]=password&amp;
+            contents="login[username]=test_user_%%_user_id%%&amp;
+                login[password]=password&amp;
                 commit=Log in" 
             content_type="application/x-www-form-urlencoded" />
         </request>
@@ -84,10 +86,10 @@
 
         <!-- follow redirect -->
         <request subst="true">　<http url="%%_services_redirect%%" method="GET" version="1.1" />　</request>
-        <request subst="true"> <http url="%%_services_redirect%%/edit" method="GET" version="1.1" /> </request>
+        <!-- <request subst="true"> <http url="%%_services_redirect%%/edit" method="GET" version="1.1" /> </request> -->
         
         <!-- submit 'edit services' form -->
-        <thinktime value="3" random="true"></thinktime>
+        <!-- <thinktime value="3" random="true"></thinktime>
         <request subst="true">
           <http 
             url="%%_services_redirect%%/edit" 
@@ -97,16 +99,15 @@
                       service[description]=Dog Grooming %%_service_suffix_2%%&amp;
                       commit=Create+Service"
             content_type="application/x-www-form-urlencoded" />
-        </request>
-        <request subst="true"> <http url="%%_services_redirect%%" method="GET" version="1.1" /> </request>
+        </request> -->
+        <!-- <request subst="true"> <http url="%%_services_redirect%%" method="GET" version="1.1" /> </request> -->
         
         <!-- Delete service -->
         <request subst="true">
           <http 
             url="%%_services_redirect%%" 
-            method="POST" 
+            method="DELETE" 
             version="1.1" 
-            contents="_method=delete" 
             content_type="application/x-www-form-urlencoded" />
         </request>
 
