@@ -17,7 +17,7 @@ class ServicesController < ApplicationController
       end
     else
       @all_services = true
-      @pagy, @services = pagy(Service.order(created_at: :desc).all)
+      @pagy, @services = pagy(Service.includes(:user).order(created_at: :desc).all)
     end
   end
 
