@@ -75,7 +75,7 @@
         <request subst="true">
           <dyn_variable name="services_redirect" re="[Ll]ocation: (.*)\r" />
           <http 
-            url="/services/new" 
+            url="/services" 
             method="POST" 
             version="1.1" 
             contents="service[title]=Dog Grooming by %%_user_id%%days&amp;
