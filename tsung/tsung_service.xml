@@ -85,7 +85,7 @@
         </request>
 
         <!-- follow redirect -->
-        <request subst="true">　<http url="%%_services_redirect%%" method="GET" version="1.1" />　</request>
+        <request subst="true"> <http url="%%_services_redirect%%" method="GET" version="1.1" /> </request>
         <!-- <request subst="true"> <http url="%%_services_redirect%%/edit" method="GET" version="1.1" /> </request> -->
         
         <!-- submit 'edit services' form -->
