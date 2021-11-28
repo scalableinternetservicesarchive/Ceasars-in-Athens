@@ -3,16 +3,19 @@
 3. `ENV_NAME=kerem`
 4. Run one of following depending on load testing conf:
 Baseline - single instance:
+    eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.2xlarge -db.user u -db.pass passwordpassword -i m5.2xlarge --single $ENV_NAME
+    
+Vertically scaled (1) - single instance:
     eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.8xlarge -db.user u -db.pass passwordpassword -i m5.8xlarge --single $ENV_NAME
 
-Vertically scaled - single instance:
+Vertically scaled (2) - single instance:
     eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.24xlarge -db.user u -db.pass passwordpassword -i m5.24xlarge --single $ENV_NAME
 
-Horizontally scaled - 5 instances:
+Horizontally scaled (1) - 5 instances:
     eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.8xlarge -db.user u -db.pass passwordpassword -i m5.8xlarge --scale 10 $ENV_NAME
 
-Horizontally scaled - 10 instances:
-    eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.8xlarge -db.user u -db.pass passwordpassword -i m5.8xlarge --scale 10 $ENV_NAME
+Horizontally scaled (2) - 10 instances:
+    eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.24xlarge -db.user u -db.pass passwordpassword -i m5.8xlarge --scale 10 $ENV_NAME
 
 5. When deployment is ready, SSH into an instance: `eb ssh $ENV_NAME`
 6. Run `cd /var/app/current && bin/rails db:seed` and wait for completion
