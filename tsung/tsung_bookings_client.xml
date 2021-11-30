@@ -63,25 +63,15 @@
                 commit=Log in" 
             content_type="application/x-www-form-urlencoded" />
         </request>
+        
+        <!-- get random appointment -->
+        <setdynvars sourcetype="random_number" start="1" end="3900000">
+          <var name="appt_id1" />
+        </setdynvars>
 
-        <request> 
-          <!-- add regex for extracting the service id -->
-          <dyn_variable name="service_id" re=".*My Test Service (.*)&lt;.*"/>
-          <http url='/' version='1.1' method='GET'></http> 
-        </request>
-        
-        <!-- go to service -> appointments -->
-        <request subst = "true"> <http url='/services/%%_service_id%%' version='1.1' method='GET'></http>  </request>
-        
-        <request subst = "true"> 
-          <!-- add regex for extracting the appointment id -->
-          <dyn_variable name="appt_id" re=".*a.*\/services\/.*\/appointments\/(.*)\?.*"/>
-          <http url='/services/%%_service_id%%/appointments' version='1.1' method='GET'></http>
-        </request>
-        
         <!-- book the appointment via query param -->
-        <request subst = "true"> 
-          <http url='/services/%%_service_id%%/appointments/%%_appt_id%%?do_action=book'
+        <request subst="true">
+          <http url='/services/1/appointments/%%_appt_id%%?do_action=book'
             version='1.1' 
             method='PATCH'
             contents = "session[:user_id]=%%_user_id%%&amp;
@@ -94,8 +84,10 @@
           <http url='/appointments' version='1.1' method='GET'></http>  
         </request>
 
-        <request> 
-          <http url='%%_services_redirect%%/appointments/%%_appointment_redirect%%/?do_action=cancel' 
+        <!-- wait for up to 2 seconds, user is looking at their appointments -->
+        <thinktime value="2" random="true"></thinktime>
+        <request subst="true"> 
+          <http url='/services/1/appointments/%%_appt_id%%/?do_action=cancel' 
             version='1.1' 
             method='PATCH'
             contents = "session[:user_id]=%%_user_id%%"
