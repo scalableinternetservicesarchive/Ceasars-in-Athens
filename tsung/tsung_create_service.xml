@@ -73,7 +73,7 @@
 
         <!-- submit 'new services' form -->
         <request subst="true">
-          <dyn_variable name="services_redirect" re="[Ll]ocation: (http://.*)\r" />
+          <dyn_variable name="services_redirect" re="[Ll]ocation: .*\.com\/(.*)\r" />
           <http 
             url="/services" 
             method="POST" 
@@ -85,7 +85,7 @@
         </request>
 
         <!-- follow redirect -->
-        <request subst="true"> <http url="%%_services_redirect%%" method="GET" version="1.1" /> </request>
+        <request subst="true"> <http url="/%%_services_redirect%%" method="GET" version="1.1" /> </request>
         <!-- <request subst="true"> <http url="%%_services_redirect%%/edit" method="GET" version="1.1" /> </request> -->
         
         <!-- submit 'edit services' form -->
