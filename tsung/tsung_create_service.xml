@@ -73,7 +73,7 @@
 
         <!-- submit 'new services' form -->
         <request subst="true">
-          <dyn_variable name="services_redirect" re="[Ll]ocation: (.*)\r" />
+          <dyn_variable name="services_redirect" re="Location: (http://.*)\r" />
           <http 
             url="/services" 
             method="POST" 
