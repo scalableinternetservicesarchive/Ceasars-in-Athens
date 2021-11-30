@@ -1,0 +1,51 @@
+in this test, user starts at root page for services, 
+logs into the service, goes to their appointments page,
+views their appointments as a provider, and logs out
+
+Baseline - single instance:
+	We notice that successful responses are served at a constant rate, 
+    despite varying number of requests: shown from graph
+        stored in final.zip and comp.zip
+
+	Upon inspection of nginx logs on the EB instance, we see that 
+    there is some file descriptor issue with the Rails app UNIX socket which
+    causes the 502 errors
+    Specifically, it looks like the errors start from arrival phase 6
+
+	```
+	2021/11/29 06:21:42 [error] 8338#8338: *186014 connect() to unix:///var/run/puma/my_app.sock 
+    failed (11: Resource temporarily unavailable) while connecting to upstream, client: 54.184.171.126, 
+    serve3r: _, request: "GET / HTTP/1.1", upstream: "http://unix:///var/run/puma/my_app.sock:/", 
+    host: "koki.eba-8zhfquyf.us-west-2.elasticbeanstalk.com"
+	```
+
+	This leads us to vertically scale
+
+Vertically Scaled 1:
+
+	The 502 issues are now gone from the vertical scaling as shown in the graphs
+
+    Thus, now will push limits by increasing the arrival phases from 7 -> 10
+    Leads to more 502 errors
+        2021/11/29 22:13:34 [error] 11413#11413: *2019088 connect() to unix:///var/run/p
+        uma/my_app.sock failed (11: Resource temporarily unavailable) while connecting t
+        o upstream, client: 54.218.79.243, server: _, request: "GET / HTTP/1.1", upstrea
+        m: "http://unix:///var/run/puma/my_app.sock:/", host: "koki3.eba-8zhfquyf.us-wes
+        t-2.elasticbeanstalk.com"
+
+Vertically Scaled 2:
+    502 errors still presist thus will horizontally scale to 10 with vert scale 1
+            2021/11/29 22:13:34 [error] 11413#11413: *2019088 connect() to unix:///var/run/p
+            uma/my_app.sock failed (11: Resource temporarily unavailable) while connecting t
+            o upstream, client: 54.218.79.243, server: _, request: "GET / HTTP/1.1", upstrea
+            m: "http://unix:///var/run/puma/my_app.sock:/", host: "koki3.eba-8zhfquyf.us-wes
+            t-2.elasticbeanstalk.com"
+    
+Horizontally Scaled + vertical 1:
+    500 errors started to occur, but there is a decrease in the 502 errors
+
+    will now scale vertically as well 
+
+Horizontally Scaled + vertical 2:
+    no errors
+	
