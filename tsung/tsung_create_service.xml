@@ -6,7 +6,7 @@
   </clients>
 
   <servers>
-    <server host="koki.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+    <server host="ashBase.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
   </servers>
 
   <load>
@@ -69,7 +69,7 @@
         <request> <http url="/services/new" method="GET" version="1.1" /> </request>
 
         <!-- Wait while user fills out 'new services' form -->
-        <thinktime value="3" random="true"></thinktime>
+        <thinktime value="5" random="true"></thinktime>
 
         <!-- submit 'new services' form -->
         <request subst="true">
@@ -103,6 +103,7 @@
         <!-- <request subst="true"> <http url="%%_services_redirect%%" method="GET" version="1.1" /> </request> -->
         
         <!-- Delete service -->
+        <!--
         <request subst="true">
           <http 
             url="%%_services_redirect%%" 
@@ -110,6 +111,7 @@
             version="1.1" 
             content_type="application/x-www-form-urlencoded" />
         </request>
+        -->
 
         <request> <http url="/services" method="GET" version="1.1" /> </request>
 
