@@ -87,7 +87,7 @@
             method="POST" 
             version="1.1" 
             contents="review[rating]=1&amp;
-                review[review]=%%_random_string%%&amp;
+                review[review]=%%_service_suffix%%&amp;
                 commit=Create+Review" 
             content_type="application/x-www-form-urlencoded" />
         </request>
