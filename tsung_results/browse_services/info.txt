@@ -1,0 +1,67 @@
+in this test, user starts at root page for services, and navigates to the next page 20 times.
+
+Baseline:
+
+	We notice that successful responses are served at a constant rate, despite varying number of requests: 120 HTTP 200 per second.
+	Upon inspection of nginx logs on the EB instance, we see that there is some file descriptor issue with the Rails app UNIX socket:
+	```
+	2021/11/25 20:35:54 [error] 7650#7650: *13826 connect() to unix:///var/run/puma/my_app.sock failed (11: Resource temporarily unavailable) while connecting to upstream, client: 54.190.195.46, server: _, request: "GET /?page=1 HTTP/1.1", upstream: "http://unix:///var/run/puma/my_app.sock:/?page=1", host: "kerem2.eba-8zhfquyf.us-west-2.elasticbeanstalk.com"
+	```
+
+	We also notice that there is ~100% CPU usage in the RDS instance during the load tests:
+
+	<image high_rds_cpu_baseline.png>
+
+	This leads us to vertically scale both the DB and app servers:
+
+Vertically Scaled 1:
+
+	We notice the same constant rate of successful responses as our baseline configuration, indicating we are still at a bottleneck. We are capped at roughly 500 HTTP 200 per second, which is ~4 times that of the m5.2xlarge, and we have 4x more CPU cores, which leads us to believe that the bottleneck is on the app side, despite the RDS instance showing ~100% CPU usage during the latter stages of the load test:
+
+	<image high_rds_cpu_vertical-1.png>
+
+	We continue to scale up the resources on both the app and DB servers:
+
+Vertically Scaled 2:
+	
+	Again, we reach a constant rate of success at 1500 HTTP 200 per second which reinforces our theory that the default concurrency of an app is proportional to its number of CPU cores, since we see the same nginx errors and none that are DB related. We also notice that the RDS CPU usage is at 100% in the latter stages of the test again.
+
+	This leads us to stop scaling app servers up, and instead out. We can gain the same number of requests to the database at a cheaper cost. We still have not had any failures due to database overload. 
+
+Horizontally Scaled 1:
+	
+	We notice that once again HTTP 200 responses are capped at roughly ~500/second despite having 5 instances with the same size as "Vertically Scaled 1". However, in this test we notice that we do not have any nginx errors related to file descriptors. Instead, we see that the app logs errors like:
+	```
+	ActiveRecord::ConnectionTimeoutError (could not obtain a connection from the pool within 5.000 seconds (waited 5.000 seconds); all pooled connections were in use)
+	```.
+	We also see that the RDS CPU usage is exactly like that in "Vertically Scaled 1":
+
+	<image high_rds_cpu_horizontal-1.png>
+
+	Now we consider that the database is our bottleneck. We have allowed requests to flow more freely between app servers and the database by increasing the number of app servers and thus reducing the average load on each app. The RDS instance cannot satisfy our increased number of incoming requests, so the app server connection pool becomes exhausted. 
+
+	At this point, we decide to scale the database back up to the m5.24xlarge and scale the apps out to 10 in order to improve RDS performance and reduce the contention on individual app's connection pools.
+
+Horizontally Scaled 2:
+	HTTP 200 responses hover around ~1500/second in this test. Again, we do not see any nginx errors on any of the 10 app servers, and instead see the same connection pool exhaustion. 
+
+	Now we look into optimizing the way our app interacts with the database.
+
+N+1 Query Elimination:
+	To load a page of the services feed, we first find a subset of 10 services according to our pagination layout (recently created services first). As we generate the HTML to send to the client, we must perform 10 additional queries to another table to find the name of the user that created the service.
+
+	We considered 3 options to avoid these 10 additional queries for each page:
+	1. Denormalization of the services table. We can instead include both the user ID and username of the creator in the services table, since these columns will not change after a service has been created.
+
+	2. Perform a LEFT OUTER JOIN with the services and users table when querying. 
+
+	3. Dispatch a single second query to the database to get the usernames for the user IDs included in the page we are about to render.
+
+	We chose the third option because 
+	(a.) we prefer to keep our production database consistent with our normalized design to make it easier to reason about our schemas.
+	and 
+	(b.) since we use OFFSET+LIMIT based pagination, for very high page numbers (2.) would involve performing JOINS on the entire table before dropping rows based on the OFFSET clause. If we used cursor-based pagination instead, the query optimizer would likely be able to perform the filtering based on the WHERE clauses before applying the JOIN.
+
+	With this optimization, we do not see a dramatic increase in the number of requests we can serve successfully. This is likely because the users table for our tests is relatively small, and the table and its indexes can be cached entirely in memory. It is also likely that Rails acquires a single DB connection from the pool per page load and pipelines requests over it. Since each query to fetch the username of a service's owner takes fractions of a milliseconds, we hardly reduce the amount of time that a connection is in use.
+
+	However, we do notice a slight drop in latency at the earlier stages of the test. 
