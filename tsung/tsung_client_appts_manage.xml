@@ -6,7 +6,7 @@
   </clients>
 
   <servers>
-    <server host="kokinarimoto.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+    <server host="ashVert1.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
   </servers>
 
   <load>
@@ -93,6 +93,10 @@
             contents = "session[:user_id]=%%_user_id%%"
             content_type="application/x-www-form-urlencoded">
           </http>  
+        </request>
+
+        <request> 
+          <http url='/appointments' version='1.1' method='GET'></http>  
         </request>
         
         <!-- Log out -->
