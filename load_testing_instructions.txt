@@ -12,7 +12,7 @@ Vertically scaled (2) - single instance:
     eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.24xlarge -db.user u -db.pass passwordpassword -i m5.24xlarge --single $ENV_NAME
 
 Horizontally scaled (1) - 5 instances:
-    eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.8xlarge -db.user u -db.pass passwordpassword -i m5.8xlarge --scale 10 $ENV_NAME
+    eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.8xlarge -db.user u -db.pass passwordpassword -i m5.8xlarge --scale 5 $ENV_NAME
 
 Horizontally scaled (2) - 10 instances:
     eb create --envvars SECRET_KEY_BASE=BADSECRET -db.engine postgres -db.i db.m5.24xlarge -db.user u -db.pass passwordpassword -i m5.8xlarge --scale 10 $ENV_NAME
