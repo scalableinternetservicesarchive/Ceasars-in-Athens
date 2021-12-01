@@ -1,0 +1,76 @@
+<?xml version="1.0"?><tsung loglevel="notice">
+  <clients>
+    <client host="localhost" maxusers="32768" use_controller_vm="true"/>
+  </clients>
+
+  <servers>
+    <server host="kevinpj.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"/>
+  </servers>
+
+  <load>
+    <arrivalphase phase="1" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="20" unit="second"/>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="40" unit="second"/>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="80" unit="second"/>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="160" unit="second"/>
+    </arrivalphase>
+    <arrivalphase phase="5" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="320" unit="second"/>
+    </arrivalphase>
+  </load>
+
+  <options>
+    <option name="global_ack_timeout" value="2000"/>
+    </options>
+
+<sessions>
+    <session name="booking" probability="100" type="ts_http">
+      <transaction name="book_rate_service">
+
+        <setdynvars sourcetype="random_number" start="1" end="10">
+          <var name="user_id"/>
+        </setdynvars>
+        
+        <setdynvars sourcetype="random_string" length="15"> <var name="service_suffix"/> </setdynvars>
+        
+        <request> <http url="/" version="1.1" method="GET"/> </request>
+        <request> <http url="/login" version="1.1" method="GET"/> </request>
+        
+        <thinktime value="2" random="true"/>
+        <request subst="true">
+          <http url="/login" method="POST" version="1.1" contents="login[username]=test_user_%%_user_id%%&amp;                 login[password]=password&amp;                 commit=Log in" content_type="application/x-www-form-urlencoded"/>
+        </request>
+        <request> <http url="/" version="1.1" method="GET"/> </request>
+
+        <thinktime value="2" random="true"/>
+        <setdynvars sourcetype="random_number" start="1" end="100000">
+          <var name="service_id"/>
+        </setdynvars>
+
+        <request subst="true"> <http url="/services/%%_service_id%%" version="1.1" method="GET"/>  </request>
+        <thinktime value="1" random="true"/>
+        <request subst="true"> <http url="/services/%%_service_id%%/reviews" version="1.1" method="GET"/>  </request>
+        <thinktime value="1" random="true"/>
+        <request subst="true"> <http url="/services/%%_service_id%%/reviews/new" version="1.1" method="GET"/>  </request>
+        
+        <thinktime value="5" random="true"/>
+        <request subst="true">
+          <http url="/services/%%_service_id%%/reviews" method="POST" version="1.1" contents="review[rating]=1&amp;                 review[review]=%%_service_suffix%%&amp;                 commit=Create+Review" content_type="application/x-www-form-urlencoded"/>
+        </request>
+
+        <request subst="true"> <http url="/services/%%_service_id%%/reviews" version="1.1" method="GET"/>  </request>
+
+        <request>
+          <http url="/logout" method="POST" version="1.1" contents="_method=delete" content_type="application/x-www-form-urlencoded"/>
+        </request>
+
+      </transaction>
+    </session>
+  </sessions>
+</tsung>
