@@ -6,7 +6,7 @@
   </clients>
 
   <servers>
-    <server host="kokinarimoto.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+    <server host="lara28.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
   </servers>
 
   <load>
@@ -76,11 +76,13 @@
         <request subst="true"> <http url='/services/%%_service_id%%/appointments' version='1.1' method='GET' /> </request>
         
         <!-- get random appointment -->
+        <thinktime value="2" random="true"></thinktime>
         <setdynvars sourcetype="random_number" start="1" end="3900000">
           <var name="appt_id" />
         </setdynvars>
 
         <!-- book the appointment via query param -->
+        <thinktime value="2" random="true"></thinktime>
         <request subst="true">
           <http url='/services/%%_service_id%%/appointments/%%_appt_id%%?do_action=book'
             version='1.1' 
