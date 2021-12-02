@@ -6,7 +6,7 @@
   </clients>
 
   <servers>
-    <server host="<yourec2>.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+    <server host="kevin.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
   </servers>
 
   <load>
@@ -35,7 +35,7 @@
 <!--Scenario: Log in / See and Find a Service / Book a Service / Choose Availability / Logout-->
 <sessions>
     <session name="provider" weight = "1" type="ts_http">
-        <transaction name = "realistic flow">
+        <transaction name = "realistic_flow">
             <!-- create a random user_id -->
             <setdynvars sourcetype="random_number" start="1" end="10">
                 <var name="user_id" />
