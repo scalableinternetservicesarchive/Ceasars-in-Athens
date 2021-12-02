@@ -35,7 +35,7 @@
 <!--Scenario: Log in / See and Find a Service / Book a Service / Choose Availability / Logout-->
 <sessions>
     <session name="provider" weight = "1" type="ts_http">
-        <transaction name = "realistic flow">
+        <transaction name = "realistic_flow">
             <!-- create a random user_id -->
             <setdynvars sourcetype="random_number" start="1" end="10">
                 <var name="user_id" />
@@ -87,8 +87,20 @@
             <request subst="true"> <http url="/%%_services_redirect%%" method="GET" version="1.1" /> </request>
             <request>  <http url='/' version='1.1' method='GET' /> </request>
 
+            <!-- click edit a service -->
+            <request> <http url="/%%_services_redirect%%/edit" method="GET" version="1.1" /> </request>
+
             <!-- Edit the service -->
-            
+            <request subst="true">
+                <http 
+                    url="/%%_services_redirect%%" 
+                    method="PATCH" 
+                    version="1.1" 
+                    contents="service[title]=Dog Grooming by Edited%%_user_id%%days&amp;
+                            service[description]Dog Grooming Edited%%_service_suffix%%&amp;
+                            commit=Update+Service"
+                    content_type="application/x-www-form-urlencoded" />
+                </request>
 
             <!-- Post a new Appointment -->
 
