@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd" [] >
+<tsung loglevel="notice">
+  <clients>
+    <client host="localhost" maxusers="32768" use_controller_vm="true" />
+  </clients>
+
+  <servers>
+    <server host="realisticflowPJ.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+  </servers>
+
+  <load>
+    <arrivalphase phase="1" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="10" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="20" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="40" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="80" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="5" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="160" unit="second"></users>
+    </arrivalphase>
+  </load>
+
+  <options>
+    <!-- Set connection timeout to 2 seconds -->
+    <option name="global_ack_timeout" value="2000"></option>
+  </options>
+
+<!--Scenario: Log in / See and Find a Service / Book a Service / Choose Availability / Logout-->
+<sessions>
+    <session name="provider" weight = "1" type="ts_http">
+        <transaction name = "realistic_flow">
+            <!-- create a random user_id -->
+            <setdynvars sourcetype="random_number" start="1" end="10">
+                <var name="user_id" />
+            </setdynvars>
+
+            <setdynvars sourcetype="random_string" length="15"> 
+                <var name="service_suffix" /> 
+            </setdynvars>
+
+            <request> <http url='/' version='1.1' method='GET'></http> </request>
+            <request> <http url='/login' version='1.1' method='GET'></http> </request>
+
+            <thinktime value="2" random="true"></thinktime>
+            <request subst="true">
+                <http 
+                    url="/login" 
+                    method="POST" 
+                    version="1.1" 
+                    contents="login[username]=test_user_%%_user_id%%&amp;
+                        login[password]=password&amp;
+                        commit=Log in" 
+                    content_type="application/x-www-form-urlencoded" />
+            </request>
+
+
+            <request> <http url='/' version='1.1' method='GET'></http> </request>
+            
+            <!-- click create a service -->
+            <request> <http url="/services/new" method="GET" version="1.1" /> </request>
+
+            <!-- Wait while user fills out 'new services' form -->
+            <thinktime value="5" random="true"></thinktime>
+
+            <!-- submit 'new services' form -->
+            <request subst="true">
+                <dyn_variable name="services_redirect" re="[Ll]ocation: .*\.com\/(.*)\r" />
+                <http 
+                    url="/services" 
+                    method="POST" 
+                    version="1.1" 
+                    contents="service[title]=Dog Grooming by %%_user_id%%days&amp;
+                            service[description]Dog Grooming %%_service_suffix%%&amp;
+                            commit=Create+Service"
+                    content_type="application/x-www-form-urlencoded" />
+                </request>
+
+            <!-- follow redirect -->
+            <request subst="true"> <http url="/%%_services_redirect%%" method="GET" version="1.1" /> </request>
+            <!-- <request>  <http url='/' version='1.1' method='GET' /> </request> -->
+
+            <!-- <if var="services_redirect" neq=''> -->
+                <!-- <request subst="true"> <http url="/%%_services_redirect%%/edit" method="GET" version="1.1" /> </request> -->
+            <!-- </if> -->
+            <!-- click edit a service -->
+            <!-- <request subst="true"> <http url="/%%_services_redirect%%/edit" method="GET" version="1.1" /> </request> -->
+
+            <!-- Edit the service -->
+            <request subst="true">
+                <http 
+                    url="/%%_services_redirect%%" 
+                    method="PUT" 
+                    version="1.1" 
+                    contents="service[title]=Dog Grooming by %%_user_id%%days&amp;
+                            service[description]Dog Grooming %%_service_suffix%%&amp;
+                            commit=Update+Service"
+                    content_type="application/x-www-form-urlencoded" />
+                </request>
+
+            <!-- follow redirect -->
+            <request subst="true"> <http url="/%%_services_redirect%%" method="GET" version="1.1" /> </request>
+
+            <!-- Post a new Appointment -->
+            <!-- click on manage appointments to create appointment slots -->
+            <request subst="true"> <http url="/%%_services_redirect%%/appointments" method="GET" version="1.1" /> </request>
+            <!-- click on generate appointments to create appointment slots -->
+            <request subst="true"> <http url="/%%_services_redirect%%/appointments/new" method="GET" version="1.1" /> </request>
+
+            <!-- <request subst="true">
+                <dyn_variable name="appointments_redirect" re="[Ll]ocation: (.*)\r" />
+                <http 
+                    url="/%%_services_redirect%%/appointments/new"
+                    method="POST" version="1.1"
+                    contents="appointment[date]=cia%%_random_user%%&amp;
+                        appointment[start_time]=%%_user_password%%&amp;
+                        appointment[start_time]=%%_user_password%%&amp;
+                        appointment[start_time]=%%_user_password%%&amp;
+                        commit=Log in"
+                    content_type="application/x-www-form-urlencoded" />
+            </request>  -->
+
+            <!--redirect-->
+            <!-- <request subst="true"> <http url="/%%_services_redirect%%/appointments" method="GET" version="1.1" /> </request> -->
+
+
+
+            <!-- Manage the appointment -->
+            
+          
+            <!-- Log out -->
+            <request>
+                <http 
+                    url="/logout" 
+                    method="POST" 
+                    version="1.1" 
+                    contents="_method=delete" 
+                    content_type="application/x-www-form-urlencoded" />
+            </request>
+
+        </transaction>
+
+    </session>
+ 
+  </sessions>
+</tsung>

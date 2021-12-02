@@ -6,7 +6,7 @@
   </clients>
 
   <servers>
-    <server host="<yourec2>.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
+    <server host="realisticflowPJ.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"></server>
   </servers>
 
   <load>
@@ -88,10 +88,10 @@
             <request>  <http url='/' version='1.1' method='GET' /> </request>
 
             <!-- click edit a service -->
-            <request> <http url="/%%_services_redirect%%/edit" method="GET" version="1.1" /> </request>
+            <!-- <request> <http url="/%%_services_redirect%%/edit" method="GET" version="1.1" /> </request> -->
 
             <!-- Edit the service -->
-            <request subst="true">
+            <!-- <request subst="true">
                 <http 
                     url="/%%_services_redirect%%" 
                     method="PATCH" 
@@ -100,7 +100,7 @@
                             service[description]Dog Grooming Edited%%_service_suffix%%&amp;
                             commit=Update+Service"
                     content_type="application/x-www-form-urlencoded" />
-                </request>
+                </request> -->
 
             <!-- Post a new Appointment -->
 
