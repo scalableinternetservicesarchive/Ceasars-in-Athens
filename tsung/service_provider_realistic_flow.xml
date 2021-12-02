@@ -113,18 +113,18 @@
             <!-- click on generate appointments to create appointment slots -->
             <request subst="true"> <http url="/%%_services_redirect%%/appointments/new" method="GET" version="1.1" /> </request>
 
-            <!-- <request subst="true">
+            <request subst="true">
                 <dyn_variable name="appointments_redirect" re="[Ll]ocation: (.*)\r" />
                 <http 
                     url="/%%_services_redirect%%/appointments/new"
                     method="POST" version="1.1"
-                    contents="appointment[date]=cia%%_random_user%%&amp;
-                        appointment[start_time]=%%_user_password%%&amp;
-                        appointment[start_time]=%%_user_password%%&amp;
-                        appointment[start_time]=%%_user_password%%&amp;
-                        commit=Log in"
+                    contents="appointment[date]=02/02/2022&amp;
+                        appointment[start_time]=07:00&amp;
+                        appointment[end_time]=23:00&amp;
+                        appointment[duration]=15+minutes&amp;
+                        commit=Generate+appointments"
                     content_type="application/x-www-form-urlencoded" />
-            </request>  -->
+            </request> 
 
             <!--redirect-->
             <!-- <request subst="true"> <http url="/%%_services_redirect%%/appointments" method="GET" version="1.1" /> </request> -->
