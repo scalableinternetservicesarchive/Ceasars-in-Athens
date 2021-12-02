@@ -86,6 +86,13 @@
             <!-- follow redirect -->
             <request subst="true"> <http url="/%%_services_redirect%%" method="GET" version="1.1" /> </request>
             <request>  <http url='/' version='1.1' method='GET' /> </request>
+
+            <!-- Edit the service -->
+            
+
+            <!-- Post a new Appointment -->
+
+            <!-- Manage the appointment -->
             
             <!-- go to my appointments -->
             <request> <http url='/appointments' version='1.1' method='GET' />  </request>
