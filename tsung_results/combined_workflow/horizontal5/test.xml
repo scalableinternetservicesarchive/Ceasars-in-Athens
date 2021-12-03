@@ -1,0 +1,349 @@
+<?xml version="1.0"?><tsung loglevel="notice">
+  <clients>
+    <client host="localhost" maxusers="32768" use_controller_vm="true"/>
+  </clients>
+
+  <servers>
+    <server host="kevin5.eba-8zhfquyf.us-west-2.elasticbeanstalk.com" port="80" type="tcp"/>
+  </servers>
+
+  <load>
+    <arrivalphase phase="1" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="10" unit="second"/>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="20" unit="second"/>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="40" unit="second"/>
+    </arrivalphase>
+    <arrivalphase phase="4" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="80" unit="second"/>
+    </arrivalphase>
+    <arrivalphase phase="5" duration="200" unit="second" wait_all_sessions_end="true">
+      <users arrivalrate="160" unit="second"/>
+    </arrivalphase>
+  </load>
+
+  <options>
+    <option name="global_ack_timeout" value="2000"/>
+  </options>
+
+<sessions>
+    <session name="provider" weight="1" type="ts_http">
+        <transaction name="realistic_flow">
+            <setdynvars sourcetype="random_number" start="1" end="10">
+                <var name="user_id"/>
+            </setdynvars>
+
+            <setdynvars sourcetype="random_string" length="15"> 
+                <var name="service_suffix"/> 
+            </setdynvars>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            <request> <http url="/login" version="1.1" method="GET"/> </request>
+
+            <thinktime value="2" random="true"/>
+            <request subst="true">
+                <http url="/login" method="POST" version="1.1" contents="login[username]=test_user_%%_user_id%%&amp;                         login[password]=password&amp;                         commit=Log in" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            
+            <request> <http url="/services/new" method="GET" version="1.1"/> </request>
+
+            <thinktime value="5" random="true"/>
+
+            <request subst="true">
+                <dyn_variable name="services_redirect" re="[Ll]ocation: .*\.com\/(.*)\r"/>
+                <http url="/services" method="POST" version="1.1" contents="service[title]=Dog Grooming by %%_user_id%%days&amp;                             service[description]Dog Grooming %%_service_suffix%%&amp;                             commit=Create+Service" content_type="application/x-www-form-urlencoded"/>
+                </request>
+
+            <request subst="true"> <http url="/%%_services_redirect%%" method="GET" version="1.1"/> </request>
+            <request>  <http url="/" version="1.1" method="GET"/> </request>
+            
+            <request> <http url="/appointments" version="1.1" method="GET"/>  </request>
+            <request> <http url="/appointments?view=provider" version="1.1" method="GET"/>  </request>
+            
+            <request>
+                <http url="/logout" method="POST" version="1.1" contents="_method=delete" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+        </transaction>
+        <transaction name="create_service">
+            <setdynvars sourcetype="random_number" start="1" end="10">
+                <var name="user_id"/>
+            </setdynvars>
+
+            <setdynvars sourcetype="random_string" length="15"> 
+                <var name="service_suffix"/> 
+            </setdynvars>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            <request> <http url="/login" version="1.1" method="GET"/> </request>
+
+            <thinktime value="2" random="true"/>
+            <request subst="true">
+                <http url="/login" method="POST" version="1.1" contents="login[username]=test_user_%%_user_id%%&amp;                         login[password]=password&amp;                         commit=Log in" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            
+            <request> <http url="/services/new" method="GET" version="1.1"/> </request>
+
+            <thinktime value="5" random="true"/>
+
+            <request subst="true">
+                <dyn_variable name="services_redirect" re="[Ll]ocation: .*\.com\/(.*)\r"/>
+                <http url="/services" method="POST" version="1.1" contents="service[title]=Dog Grooming by %%_user_id%%days&amp;                             service[description]Dog Grooming %%_service_suffix%%&amp;                             commit=Create+Service" content_type="application/x-www-form-urlencoded"/>
+                </request>
+
+            <request subst="true"> <http url="/%%_services_redirect%%" method="GET" version="1.1"/> </request>
+
+            <request> <http url="/services" method="GET" version="1.1"/> </request>
+
+            <request>
+            <http url="/logout" method="POST" version="1.1" contents="_method=delete" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+        </transaction>
+
+        <transaction name="manage_appointments">
+            <setdynvars sourcetype="random_number" start="1" end="99">
+                <var name="user_id"/>
+            </setdynvars>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            <request> <http url="/login" version="1.1" method="GET"/> </request>
+            
+            <thinktime value="2" random="true"/>
+            <request subst="true">
+                <http url="/login" method="POST" version="1.1" contents="login[username]=test_user_%%_user_id%%&amp;                         login[password]=password&amp;                         commit=Log+in" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+            <request>  <http url="/" version="1.1" method="GET"/> </request>
+            
+            <request> <http url="/appointments" version="1.1" method="GET"/>  </request>
+            <request> <http url="/appointments?view=provider" version="1.1" method="GET"/>  </request>
+            
+            <request>
+                <http url="/logout" method="POST" version="1.1" contents="_method=delete" content_type="application/x-www-form-urlencoded"/>
+            </request>
+      </transaction>
+
+    </session>
+    <session name="client" weight="1" type="ts_http">
+        <transaction name="realistic_flow">
+            <setdynvars sourcetype="random_number" start="1" end="10">
+                <var name="user_id"/>
+            </setdynvars>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            <request> <http url="/login" version="1.1" method="GET"/> </request>
+            
+            <thinktime value="2" random="true"/>
+            <request subst="true">
+                <http url="/login" method="POST" version="1.1" contents="login[username]=test_user_%%_user_id%%&amp;                         login[password]=password&amp;                         commit=Log in" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            <for from="1" to="5" incr="1" var="counter">
+                <setdynvars sourcetype="random_number" start="1" end="5">
+                    <var name="next_page"/>
+                </setdynvars>
+
+                <thinktime value="2" random="true"/>
+                <request subst="true"> <http url="/?page=%%_next_page%%" version="1.1" method="GET"/> </request>
+            </for>
+
+            <setdynvars sourcetype="random_number" start="1" end="100000"> <var name="service_id"/> </setdynvars>
+
+            <request subst="true"> <http url="/services/%%_service_id%%" version="1.1" method="GET"/> </request>
+            <request subst="true"> <http url="/services/%%_service_id%%/appointments" version="1.1" method="GET"/> </request>
+            
+            <thinktime value="2" random="true"/>
+            <setdynvars sourcetype="random_number" start="1" end="3900000">
+                <var name="appt_id"/>
+            </setdynvars>
+
+            <thinktime value="2" random="true"/>
+            <request subst="true">
+                <http url="/services/%%_service_id%%/appointments/%%_appt_id%%?do_action=book" version="1.1" method="PATCH" contents="session[:user_id]=%%_user_id%%&amp;                         commit=Book+appointment?" content_type="application/x-www-form-urlencoded"/>  
+            </request>
+
+            <request> <http url="/appointments" version="1.1" method="GET"/> </request>
+
+            <request subst="true"> <http url="/services/%%_service_id%%" version="1.1" method="GET"/>  </request>
+            <thinktime value="1" random="true"/>
+            <request subst="true"> <http url="/services/%%_service_id%%/reviews" version="1.1" method="GET"/>  </request>
+            <thinktime value="1" random="true"/>
+            <request subst="true"> <http url="/services/%%_service_id%%/reviews/new" version="1.1" method="GET"/>  </request>
+            
+            <setdynvars sourcetype="random_string" length="15"> 
+                <var name="service_suffix"/> 
+            </setdynvars>
+
+            <thinktime value="5" random="true"/>
+            <request subst="true">
+                <http url="/services/%%_service_id%%/reviews" method="POST" version="1.1" contents="review[rating]=1&amp;                         review[review]=%%_service_suffix%%&amp;                         commit=Create+Review" content_type="application/x-www-form-urlencoded"/>
+            </request>
+            <request subst="true"> <http url="/services/%%_service_id%%/reviews" version="1.1" method="GET"/>  </request>
+
+            <request> 
+                <http url="/appointments" version="1.1" method="GET"/>  
+            </request>
+
+            <thinktime value="2" random="true"/>
+            <request subst="true"> 
+                <http url="/services/%%_service_id%%/appointments/%%_appt_id%%/?do_action=cancel" version="1.1" method="PATCH" contents="session[:user_id]=%%_user_id%%" content_type="application/x-www-form-urlencoded">
+                </http>  
+            </request>
+
+            <request>  <http url="/appointments" version="1.1" method="GET"/>  </request>
+
+            <request>
+                <http url="/logout" method="POST" version="1.1" contents="_method=delete" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+        </transaction>
+
+        <transaction name="browse">
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            <for from="1" to="5" incr="1" var="counter">
+                <setdynvars sourcetype="random_number" start="1" end="10">
+                    <var name="next_page"/>
+                </setdynvars>
+
+                <thinktime value="2" random="true"/>
+                <request subst="true"> <http url="/?page=%%_next_page%%" version="1.1" method="GET"/> </request>
+            </for>
+        </transaction>
+
+        <transaction name="book_service">
+
+            <setdynvars sourcetype="random_number" start="1" end="10">
+                <var name="user_id"/>
+            </setdynvars>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            <request> <http url="/login" version="1.1" method="GET"/> </request>
+            
+            <thinktime value="2" random="true"/>
+            <request subst="true">
+                <http url="/login" method="POST" version="1.1" contents="login[username]=test_user_%%_user_id%%&amp;                         login[password]=password&amp;                         commit=Log in" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            
+            <setdynvars sourcetype="random_number" start="1" end="100000">
+                <var name="service_id"/>
+            </setdynvars>
+
+            <request subst="true"> <http url="/services/%%_service_id%%" version="1.1" method="GET"/> </request>
+            <request subst="true"> <http url="/services/%%_service_id%%/appointments" version="1.1" method="GET"/> </request>
+            
+            <thinktime value="2" random="true"/>
+            <setdynvars sourcetype="random_number" start="1" end="3900000">
+                <var name="appt_id"/>
+            </setdynvars>
+
+            <thinktime value="2" random="true"/>
+            <request subst="true">
+                <http url="/services/%%_service_id%%/appointments/%%_appt_id%%?do_action=book" version="1.1" method="PATCH" contents="session[:user_id]=%%_user_id%%&amp;                         commit=Book+appointment?" content_type="application/x-www-form-urlencoded"/>  
+            </request>
+
+            <request>  <http url="/appointments" version="1.1" method="GET"/>  </request>
+        
+            <request>
+                <http url="/logout" method="POST" version="1.1" contents="_method=delete" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+        </transaction>
+
+        <transaction name="book_rate_service">
+
+            <setdynvars sourcetype="random_number" start="1" end="10">
+                <var name="user_id"/>
+            </setdynvars>
+            
+            <setdynvars sourcetype="random_string" length="15"> 
+                <var name="service_suffix"/> 
+            </setdynvars>
+            
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            <request> <http url="/login" version="1.1" method="GET"/> </request>
+            
+            <thinktime value="2" random="true"/>
+            <request subst="true">
+                <http url="/login" method="POST" version="1.1" contents="login[username]=test_user_%%_user_id%%&amp;                         login[password]=password&amp;                         commit=Log in" content_type="application/x-www-form-urlencoded"/>
+            </request>
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+
+            <thinktime value="2" random="true"/>
+            <setdynvars sourcetype="random_number" start="1" end="100000">
+                <var name="service_id"/>
+            </setdynvars>
+
+            <request subst="true"> <http url="/services/%%_service_id%%" version="1.1" method="GET"/>  </request>
+            <thinktime value="1" random="true"/>
+            <request subst="true"> <http url="/services/%%_service_id%%/reviews" version="1.1" method="GET"/>  </request>
+            <thinktime value="1" random="true"/>
+            <request subst="true"> <http url="/services/%%_service_id%%/reviews/new" version="1.1" method="GET"/>  </request>
+            
+            <thinktime value="5" random="true"/>
+            <request subst="true">
+                <http url="/services/%%_service_id%%/reviews" method="POST" version="1.1" contents="review[rating]=1&amp;                         review[review]=%%_service_suffix%%&amp;                         commit=Create+Review" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+            <request subst="true"> <http url="/services/%%_service_id%%/reviews" version="1.1" method="GET"/>  </request>
+
+            <request>
+                <http url="/logout" method="POST" version="1.1" contents="_method=delete" content_type="application/x-www-form-urlencoded"/>
+            </request>
+        </transaction>
+
+        <transaction name="manage_appointments">
+            <setdynvars sourcetype="random_number" start="1" end="10">
+                <var name="user_id"/>
+            </setdynvars>
+
+            <request> <http url="/" version="1.1" method="GET"/> </request>
+            <request> <http url="/login" version="1.1" method="GET"/> </request>
+            
+            <thinktime value="2" random="true"/>
+            <request subst="true">
+                <http url="/login" method="POST" version="1.1" contents="login[username]=test_user_%%_user_id%%&amp;                         login[password]=password&amp;                         commit=Log in" content_type="application/x-www-form-urlencoded"/>
+            </request>
+        
+            <setdynvars sourcetype="random_number" start="1" end="3900000">
+                <var name="appt_id"/>
+            </setdynvars>
+
+            <request subst="true">
+                <http url="/services/1/appointments/%%_appt_id%%?do_action=book" version="1.1" method="PATCH" contents="session[:user_id]=%%_user_id%%&amp;                         commit=Book+appointment?" content_type="application/x-www-form-urlencoded"/>  
+            </request>
+
+            <request> 
+                <http url="/appointments" version="1.1" method="GET"/>  
+            </request>
+
+            <thinktime value="2" random="true"/>
+            <request subst="true"> 
+                <http url="/services/1/appointments/%%_appt_id%%/?do_action=cancel" version="1.1" method="PATCH" contents="session[:user_id]=%%_user_id%%" content_type="application/x-www-form-urlencoded">
+                </http>  
+            </request>
+
+            <request> 
+                <http url="/appointments" version="1.1" method="GET"/>  
+            </request>
+        
+            <request>
+                <http url="/logout" method="POST" version="1.1" contents="_method=delete" content_type="application/x-www-form-urlencoded"/>
+            </request>
+
+      </transaction>
+    </session>
+  </sessions>
+</tsung>
