@@ -8,8 +8,8 @@ end
 
 conn = ActiveRecord::Base.connection()
 
-NUM_USERS = 10
-NUM_SERVICES = 10
+NUM_USERS = 100
+NUM_SERVICES = 100000
 
 APPTS_NEXT_N_DAYS = 3
 APPTS_START_HOUR = 7
