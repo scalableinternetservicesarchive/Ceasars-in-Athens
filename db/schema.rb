@@ -20,7 +20,11 @@ ActiveRecord::Schema.define(version: 2021_11_19_170532) do
     t.datetime "start_time"
     t.datetime "end_time"
     t.bigint "service_id", null: false
+    t.string "service_title"
     t.bigint "user_id"
+    t.string "user_name"
+    t.bigint "provider_id"
+    t.string "provider_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["service_id"], name: "index_appointments_on_service_id"
@@ -30,6 +34,7 @@ ActiveRecord::Schema.define(version: 2021_11_19_170532) do
   create_table "reviews", force: :cascade do |t|
     t.bigint "service_id", null: false
     t.bigint "user_id", null: false
+    t.string "user_name"
     t.integer "rating"
     t.string "review"
     t.datetime "created_at", precision: 6, null: false
@@ -42,6 +47,7 @@ ActiveRecord::Schema.define(version: 2021_11_19_170532) do
     t.string "description"
     t.string "title"
     t.bigint "user_id", null: false
+    t.string "user_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_services_on_user_id"

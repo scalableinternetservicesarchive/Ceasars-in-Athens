@@ -17,7 +17,7 @@ class ServicesController < ApplicationController
       end
     else
       @all_services = true
-      @pagy, @services = pagy(Service.includes(:user).order(created_at: :desc).all)
+      @pagy, @services = pagy(Service.order(created_at: :desc).all)
     end
   end
 
@@ -38,6 +38,7 @@ class ServicesController < ApplicationController
   def create
     @service = Service.new(service_params)
     @service.user_id = session[:user_id]
+    @service.user_name = User.find(session[:user_id]).username
 
     if @service.save
       redirect_to @service, notice: 'Created service'

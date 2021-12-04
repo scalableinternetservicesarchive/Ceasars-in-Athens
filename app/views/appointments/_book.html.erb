@@ -30,7 +30,7 @@
   <ul class="list-group">
     <% @appointments.each do |appointment| %>
       <li class="list-group-item border-0">
-        <%= link_to service_appointment_path(appointment.service.id, appointment, :do_action => :book, :reschedule => params[:reschedule]), 
+        <%= link_to service_appointment_path(appointment.service_id, appointment, :do_action => :book, :reschedule => params[:reschedule]), 
           method: :patch, class: "btn btn-outline-primary btn-lg btn-block", data: {confirm: 'Book appointment?'} do %>
           <%= render 'book_entry', appointment: appointment%>
         <% end %>

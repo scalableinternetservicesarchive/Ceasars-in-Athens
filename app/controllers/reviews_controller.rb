@@ -24,7 +24,8 @@ class ReviewsController < ApplicationController
   # POST /reviews
   def create
     @review = Review.new(review_params)
-    @review.user_id = session[:user_id]
+    @review.user_id = current_user.id
+    @review.user_name = current_user.username
     @review.service_id = @service.id
 
     if @review.save

@@ -1,8 +1,8 @@
 <div class="appointment-title">
-  <span><%= appointment.service.title %></span>            
+  <span><%= appointment.service_title %></span>            
 </div>
 <div class="appointment-author">
-  <span>With: <%= appointment.service.user.username %></span>          
+  <span>With: <%= appointment.provider_name %></span>          
 </div>
 <div class="appointment-date">
   <% start_time = appointment.start_time.getlocal('-08:00') %>

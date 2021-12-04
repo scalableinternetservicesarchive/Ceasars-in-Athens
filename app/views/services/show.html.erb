@@ -17,7 +17,7 @@
       <%= @service.title %>
     </div>
     <div class='service-meta'>
-      Posted by <span class='service-author'><%= @service.user.username %></span> on <span class='service-created-at'><%= @service.created_at %></span>
+      Posted by <span class='service-author'><%= @service.user_name %></span> on <span class='service-created-at'><%= @service.created_at %></span>
     </div>
     <div class='service-description'>
       <%= simple_format(@service.description) %>

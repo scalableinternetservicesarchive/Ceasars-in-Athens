@@ -1,9 +1,9 @@
 <div class="appointment">
   <div class="appointment-title">
-    <span><%= appointment.service.title %></span>            
+    <span><%= appointment.service_title %></span>            
   </div>
   <div class="appointment-author">
-    <span>With: <%= User.find(appointment.user_id).username %> </span>            
+    <span>With: <%= appointment.user_name %> </span>            
   </div>
   <div class="appointment-date">
     <% start_time = appointment.start_time.getlocal('-08:00') %>
@@ -16,11 +16,11 @@
   </div>
   <div class="appointment-buttons">
     <%= link_to 'Decline', 
-      service_appointment_url(appointment.service.id, appointment, :do_action => :decline),
+      service_appointment_url(appointment.service_id, appointment, :do_action => :decline),
       method: :patch, class: "btn btn-secondary btn-sm btn-block",
       data: {confirm: 'Are you sure you want to decline this appointment? This appointment slot will become available.'} %>
     <%= link_to 'Delete', 
-      service_appointment_url(appointment.service.id, appointment), 
+      service_appointment_url(appointment.service_id, appointment), 
       method: :delete, class: "btn btn-danger btn-sm btn-block",
       data: {confirm: 'Are you sure you want to cancel this appointment? This slot is already booked and will be removed.'} %>
   </div>
