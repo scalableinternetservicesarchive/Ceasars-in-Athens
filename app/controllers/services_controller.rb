@@ -38,7 +38,7 @@ class ServicesController < ApplicationController
   def create
     @service = Service.new(service_params)
     @service.user_id = session[:user_id]
-    @service.user_name = Users.find(session[:user_id]).username
+    @service.user_name = User.find(session[:user_id]).username
 
     if @service.save
       redirect_to @service, notice: 'Created service'
