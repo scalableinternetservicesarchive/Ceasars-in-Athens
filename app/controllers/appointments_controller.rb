@@ -134,7 +134,8 @@ class AppointmentsController < ApplicationController
         redirect_to appointments_url, notice: 'Appointment was canceled.'
       in "book"
         @appointment.update(user_id: session[:user_id])
-        @appointment.update(user_name: User.find(session[:user_id]).username)
+        binding.pry
+        @appointment.update(user_name: session[:username])
         if (params[:reschedule] != nil)
           appointment = Appointment.find(params[:reschedule])
           appointment.update(user_id: nil)

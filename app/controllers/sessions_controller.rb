@@ -7,6 +7,7 @@ class SessionsController < ApplicationController
     user = User.find_by(username: login_params[:username])
     if user && user.authenticate(login_params[:password])
       session[:user_id] = user.id
+      session[:user_name] = user.username
       flash[:success] = "Logged in. Welcome #{login_params[:username]}"
       redirect_to root_path
     else
