@@ -8,8 +8,8 @@ end
 
 conn = ActiveRecord::Base.connection()
 
-NUM_USERS = 100
-NUM_SERVICES = 100000
+NUM_USERS = 10
+NUM_SERVICES = 10
 
 APPTS_NEXT_N_DAYS = 3
 APPTS_START_HOUR = 7
@@ -29,10 +29,12 @@ services = []
 appointments = []
 
 (1..NUM_SERVICES).each do |i|
+  id = (i % NUM_USERS) + 1
   service = [
     "My Test Service #{i}",
     "This is a sample test service #{i}",
-    (i % NUM_USERS) + 1
+    id,
+    "test_user_#{id}"
   ]
   services << service
   (1..APPTS_NEXT_N_DAYS).each do |day_offset|
@@ -47,7 +49,10 @@ appointments = []
         date,
         curr_time,
         curr_time + APPT_DURATION_MINS.minutes,
-        i
+        i,
+        "My Test Service #{i}",
+        id,
+        "test_user_#{id}"
       ]
       appointments << appt
       curr_time += APPT_DURATION_MINS.minutes
@@ -64,11 +69,12 @@ services.in_groups_of(1000, fill_with = false) do |group|
     title = svc[0]
     description = svc[1]
     user_id = svc[2]
-    "('#{title}', '#{description}', '#{user_id}', '#{now}', '#{now}')"
+    username = svc[3]
+    "('#{title}', '#{description}', '#{user_id}', '#{username}', '#{now}', '#{now}')"
   }.join(", ")
   saved_svcs += group.length()
   puts "Saved #{saved_svcs}/#{services.length} services"
-  sql = "INSERT INTO services (title, description, user_id, created_at, updated_at) VALUES #{vals}"
+  sql = "INSERT INTO services (title, description, user_id, user_name, created_at, updated_at) VALUES #{vals}"
   conn.execute(sql)
 end
 
@@ -79,10 +85,13 @@ appointments.in_groups_of(10000, fill_with = false) do |group|
     start_time = appt[1]
     end_time = appt[2]
     service_id = appt[3]
-    "('#{date}', '#{start_time}', '#{end_time}', '#{service_id}', '#{now}', '#{now}')"
+    service_title = appt[4]
+    provider_id = appt[5]
+    provider_name = appt[6]
+    "('#{date}', '#{start_time}', '#{end_time}', '#{service_id}', '#{service_title}', '#{provider_id}', '#{provider_name}', '#{now}', '#{now}')"
   }.join(", ")
   saved_appts += group.length()
   puts "Saved #{saved_appts}/#{appointments.length} appointments"
-  sql = "INSERT INTO appointments (date, start_time, end_time, service_id, created_at, updated_at) VALUES #{vals}"
+  sql = "INSERT INTO appointments (date, start_time, end_time, service_id, service_title, provider_id, provider_name, created_at, updated_at) VALUES #{vals}"
   conn.execute(sql)
 end
