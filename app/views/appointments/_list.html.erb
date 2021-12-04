@@ -20,10 +20,10 @@
                   <%= render 'list_entry', appointment: appointment %>
                   <div class="appointment-buttons">
                     <%= link_to 'Reschedule', 
-                      service_appointments_url(appointment.service.id, :reschedule => appointment.id), 
+                      service_appointments_url(appointment.service_id, :reschedule => appointment.id), 
                       class: "btn btn-secondary btn-sm btn-block" %>
                     <%= link_to 'Cancel', 
-                      service_appointment_url(appointment.service.id, appointment, :do_action => :cancel), 
+                      service_appointment_url(appointment.service_id, appointment, :do_action => :cancel), 
                       method: :patch, class: "btn btn-danger btn-sm btn-block",
                       data: {confirm: 'Are you sure you want to cancel this appointment? This will make this appointment slot available to other users.'} %>
                   </div>

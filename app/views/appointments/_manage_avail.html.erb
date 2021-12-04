@@ -1,6 +1,6 @@
 <div class="appointment">
   <div class="appointment-title">
-    <span><%= appointment.service.title %></span>            
+    <span><%= appointment.service_title %></span>            
   </div>
   <div class="appointment-date">
     <% start_time = appointment.start_time.getlocal('-08:00') %>
@@ -13,7 +13,7 @@
   </div>
   <div class="appointment-buttons">
     <%= link_to 'Delete', 
-      service_appointment_url(appointment.service.id, appointment),
+      service_appointment_url(appointment.service_id, appointment),
       method: :delete, class: "btn btn-secondary btn-sm mt-3 btn-block",
       data: {confirm: 'Are you sure you want to delete this appointment slot?'} %>
     </div>

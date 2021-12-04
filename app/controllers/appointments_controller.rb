@@ -34,9 +34,7 @@ class AppointmentsController < ApplicationController
       @pagy_appointments, @appointments = pagy(
         Appointment
           .where(user_id: nil)
-          .includes(:service)
-          .references(:service)
-          .where('services.user_id = ?', session[:user_id])
+          .where(provider_id: session[:user_id])
           .where('start_time >= ?', now)
           .order("appointments.date", "appointments.start_time"),
         page_param: :page_appts
@@ -45,9 +43,7 @@ class AppointmentsController < ApplicationController
       @pagy_booked, @booked = pagy(
         Appointment
           .where.not(user_id: nil)
-          .includes(:service)
-          .references(:service)
-          .where('services.user_id = ?', session[:user_id])
+          .where(provider_id: session[:user_id])
           .where('start_time >= ?', now)
           .order("appointments.date", "appointments.start_time"),
         page_param: :page_booked
@@ -104,7 +100,10 @@ class AppointmentsController < ApplicationController
         date: curr_time,
         start_time: curr_time,
         end_time: curr_time + duration_mins,
-        service_id: @service.id
+        service_id: @service.id,
+        provider_id: @service.user_id,
+        provider_name: @service.user_name,
+        service_title: @service.title
       )
       @appointments << appt
       if !appt.save
@@ -126,16 +125,20 @@ class AppointmentsController < ApplicationController
       in "decline"
         # Service provider declines a user's appointment, provider redirected to original page
         @appointment.update(user_id: nil)
+        @appointment.update(user_name: nil)
         redirect_to request.referer, notice: 'Appointment was declined.'
       in "cancel"
         # User cancels an appointment, user redirected to My appointments page
         @appointment.update(user_id: nil)
+        @appointment.update(user_name: nil)
         redirect_to appointments_url, notice: 'Appointment was canceled.'
       in "book"
         @appointment.update(user_id: session[:user_id])
+        @appointment.update(user_name: User.find(session[:user_id]).username)
         if (params[:reschedule] != nil)
           appointment = Appointment.find(params[:reschedule])
           appointment.update(user_id: nil)
+          appointment.update(user_name: nil)
         end
         redirect_to appointments_url, notice: 'Appointment was successfully booked.'
     else

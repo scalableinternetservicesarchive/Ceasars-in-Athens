@@ -5,7 +5,7 @@
 </div>
 
 <div class='appointment-builder-container'>
-  <% if session[:user_id] != @service.user.id %>
+  <% if session[:user_id] != @service.user_id %>
     <div>Not authorized to access resource</div>
   <% else %>
     <%= render 'form', appointment_builder: @appointment_builder %>

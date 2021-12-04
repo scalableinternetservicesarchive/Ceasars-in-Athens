@@ -25,6 +25,7 @@ class ReviewsController < ApplicationController
   def create
     @review = Review.new(review_params)
     @review.user_id = session[:user_id]
+    @review.user_name = User.find(@review.user_id).username
     @review.service_id = @service.id
 
     if @review.save
