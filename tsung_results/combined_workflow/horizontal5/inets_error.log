@@ -1,0 +1,10 @@
+[03/Dec/2021:01:18:59 -0000], Server: tsung_controller, Protocol: HTTP, Transport: TCP, Host: 172.31.10.114:8091, Peer: 209.17.96.114:47043, Reason: [{statuscode,413},{description,"Request Entity Too Large"},{details,{max_size,20}}]
+[03/Dec/2021:01:39:42 -0000] access to /favicon.ico failed for 169.231.28.86, reason: 
+"httpd_file: Can't access /home/ec2-user/.tsung/log/20211203-0110/favicon.ico: File not found"
+[03/Dec/2021:01:39:42 -0000], Server: tsung_controller, Protocol: HTTP, Transport: TCP, URI: /favicon.ico, Host: 172.31.10.114:8091, Peer: 169.231.28.86:50238, Reason: [{statuscode,404},{description,"Object Not Found"}]
+[03/Dec/2021:01:39:42 -0000] access to /assets/ico/favicon.ico failed for 169.231.28.86, reason: 
+"httpd_file: Can't access /home/ec2-user/.tsung/log/20211203-0110/assets/ico/favicon.ico: File not found"
+[03/Dec/2021:01:39:42 -0000], Server: tsung_controller, Protocol: HTTP, Transport: TCP, URI: /assets/ico/favicon.ico, Host: 172.31.10.114:8091, Peer: 169.231.28.86:50240, Reason: [{statuscode,404},{description,"Object Not Found"}]
+[03/Dec/2021:01:50:47 -0000] access to /sql/phpmyadmin5/index.php?lang=en failed for 103.105.197.2, reason: 
+"httpd_file: Can't access /home/ec2-user/.tsung/log/20211203-0110/sql/phpmyadmin5/index.php: File not found"
+[03/Dec/2021:01:50:47 -0000], Server: tsung_controller, Protocol: HTTP, Transport: TCP, URI: /sql/phpmyadmin5/index.php?lang=en, Host: 172.31.10.114:8091, Peer: 103.105.197.2:52774, Reason: [{statuscode,404},{description,"Object Not Found"}]
