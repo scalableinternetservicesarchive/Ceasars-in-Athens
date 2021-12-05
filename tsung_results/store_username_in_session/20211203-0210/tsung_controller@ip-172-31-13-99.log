@@ -1,0 +1,64 @@
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(5:<0.127.0>) Config server started, logdir is "/home/ec2-user/.tsung/log/20211203-0210"
+ 
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+              ts_mon:(5:<0.110.0>) starting monitor, global 
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+           ts_config:(5:<0.127.0>) Reading config file: test.xml
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+           ts_config:(5:<0.127.0>) Session name for id 1 is "provider"
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+           ts_config:(5:<0.127.0>) Session name for id 2 is "client"
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(4:<0.127.0>) SYSINFO:Tsung version: 1.7.0
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(4:<0.127.0>) SYSINFO:Erlang version: Erlang/OTP 22 [erts-10.6] [source] [64-bit] [smp:96:96] [ds:96:96:10] [async-threads:8] [hipe]
+
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(4:<0.127.0>) SYSINFO:System architecture x86_64-redhat-linux-gnu
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(4:<0.127.0>) SYSINFO:Current path: /usr/lib/tsung/tsung-1.7.0/ebin/tsung.beam
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+              ts_mon:(5:<0.128.0>) Activate clients with text backend
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+              ts_mon:(5:<0.128.0>) Starting tsung clients on hosts: [localhost]
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(5:<0.127.0>) Start a launcher on the controller beam localhost
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+  ts_launcher_static:(5:<0.181.0>) Launch msg receive ("localhost")
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+         ts_launcher:(5:<0.182.0>) Launch msg receive ("localhost")
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(5:<0.127.0>) New arrival phase 1 for client "localhost" (last ? true): will start 2000 users
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(5:<0.127.0>) New arrival phase 2 for client "localhost" (last ? true): will start 4000 users
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(5:<0.127.0>) New arrival phase 3 for client "localhost" (last ? true): will start 8000 users
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(5:<0.127.0>) New arrival phase 4 for client "localhost" (last ? true): will start 16000 users
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+    ts_config_server:(5:<0.127.0>) New arrival phase 5 for client "localhost" (last ? true): will start 32000 users
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+         ts_launcher:(5:<0.182.0>) Expected duration of first phase: 200.0 sec (2000 users) 
+
+=INFO REPORT==== 3-Dec-2021::02:10:52 ===
+         ts_launcher:(5:<0.182.0>) Activate launcher (2000 users) in 1288 msec 

@@ -1,0 +1,20 @@
+# stats: dump at 1638497444
+stats: users 6 6
+stats: {load,"tsung_controller@ip-172-31-13-99"} 1 1.73828125 0 1.73828125 1.73828125 0 0
+stats: {freemem,"tsung_controller@ip-172-31-13-99"} 1 376170.18359375 0 376170.18359375 376170.18359375 0 0
+stats: {cpu,"tsung_controller@ip-172-31-13-99"} 1 0.3838578660253668 0 0.3838578660253668 0.3838578660253668 0 0
+stats: users_count 6 6
+stats: finish_users_count 0 0
+# stats: dump at 1638497444
+stats: connect 6 2.2778333333333336 1.5071822956172962 5.559 1.211 0 0
+stats: size_sent 570 570
+stats: users 6 6
+stats: connected 6 6
+stats: {load,"tsung_controller@ip-172-31-13-99"} 0 0 0 1.73828125 1.73828125 1.73828125 1
+stats: {freemem,"tsung_controller@ip-172-31-13-99"} 0 0 0 376170.18359375 376170.18359375 376170.18359375 1
+stats: {cpu,"tsung_controller@ip-172-31-13-99"} 0 0 0 0.3838578660253668 0.3838578660253668 0.3838578660253668 1
+stats: users_count 0 6
+stats: finish_users_count 0 0
+stats: connect 0 0 0 5.559 1.211 2.2778333333333336 6
+stats: size_sent 0 570
+stats: connected 0 6
