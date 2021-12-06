@@ -1,0 +1,15 @@
+[05/Dec/2021:22:29:43 -0000] access to /favicon.ico failed for 169.231.168.96, reason: 
+"httpd_file: Can't access /home/ec2-user/.tsung/log/20211205-2222/favicon.ico: File not found"
+[05/Dec/2021:22:29:43 -0000], Server: tsung_controller, Protocol: HTTP, Transport: TCP, URI: /favicon.ico, Host: 172.31.5.155:8091, Peer: 169.231.168.96:49479, Reason: [{statuscode,404},{description,"Object Not Found"}]
+[05/Dec/2021:22:29:43 -0000] access to /assets/ico/favicon.ico failed for 169.231.168.96, reason: 
+"httpd_file: Can't access /home/ec2-user/.tsung/log/20211205-2222/assets/ico/favicon.ico: File not found"
+[05/Dec/2021:22:29:43 -0000], Server: tsung_controller, Protocol: HTTP, Transport: TCP, URI: /assets/ico/favicon.ico, Host: 172.31.5.155:8091, Peer: 169.231.168.96:49481, Reason: [{statuscode,404},{description,"Object Not Found"}]
+[05/Dec/2021:23:05:47 -0000] access to /favicon.ico failed for 169.231.101.75, reason: 
+"httpd_file: Can't access /home/ec2-user/.tsung/log/20211205-2222/favicon.ico: File not found"
+[05/Dec/2021:23:05:47 -0000], Server: tsung_controller, Protocol: HTTP, Transport: TCP, URI: /favicon.ico, Host: 172.31.5.155:8091, Peer: 169.231.101.75:61665, Reason: [{statuscode,404},{description,"Object Not Found"}]
+[05/Dec/2021:23:05:47 -0000] access to /assets/ico/favicon.ico failed for 169.231.101.75, reason: 
+"httpd_file: Can't access /home/ec2-user/.tsung/log/20211205-2222/assets/ico/favicon.ico: File not found"
+[05/Dec/2021:23:05:47 -0000], Server: tsung_controller, Protocol: HTTP, Transport: TCP, URI: /assets/ico/favicon.ico, Host: 172.31.5.155:8091, Peer: 169.231.101.75:61671, Reason: [{statuscode,404},{description,"Object Not Found"}]
+[05/Dec/2021:23:05:50 -0000] access to /favicon.ico failed for 169.231.101.75, reason: 
+"httpd_file: Can't access /home/ec2-user/.tsung/log/20211205-2222/favicon.ico: File not found"
+[05/Dec/2021:23:05:50 -0000], Server: tsung_controller, Protocol: HTTP, Transport: TCP, URI: /favicon.ico, Host: 172.31.5.155:8091, Peer: 169.231.101.75:61669, Reason: [{statuscode,404},{description,"Object Not Found"}]
